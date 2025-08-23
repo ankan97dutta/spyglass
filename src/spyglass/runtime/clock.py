@@ -3,13 +3,12 @@
 
 - now_ns(): nanoseconds from an arbitrary, monotonic reference (perf_counter_ns)
 """
+
 from __future__ import annotations
+
 import time
 
-
 __all__ = ["now_ns"]
-
-
 
 
 def now_ns() -> int:

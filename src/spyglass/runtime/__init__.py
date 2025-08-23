@@ -8,27 +8,27 @@ Acceptance:
 
 Public API surface exported here for convenience.
 """
-from .ids import span_id
+
 from .clock import now_ns
 from .context import (
-get_trace_id,
-get_span_id,
-set_trace_id,
-set_span_id,
-reset_trace_id,
-reset_span_id,
-use_span,
+    get_span_id,
+    get_trace_id,
+    reset_span_id,
+    reset_trace_id,
+    set_span_id,
+    set_trace_id,
+    use_span,
 )
-
+from .ids import span_id
 
 __all__ = [
-"span_id",
-"now_ns",
-"get_trace_id",
-"get_span_id",
-"set_trace_id",
-"set_span_id",
-"reset_trace_id",
-"reset_span_id",
-"use_span",
+    "span_id",
+    "now_ns",
+    "get_trace_id",
+    "get_span_id",
+    "set_trace_id",
+    "set_span_id",
+    "reset_trace_id",
+    "reset_span_id",
+    "use_span",
 ]

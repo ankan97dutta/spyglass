@@ -3,13 +3,12 @@
 
 - span_id(): 64-bit random value encoded as 16-char lowercase hex
 """
+
 from __future__ import annotations
+
 import secrets
 
-
 __all__ = ["span_id"]
-
-
 
 
 def _rand64() -> int:
@@ -20,8 +19,6 @@ def _rand64() -> int:
     platforms once initialized. This avoids any Python-level locks on the hot path.
     """
     return secrets.randbits(64)
-
-
 
 
 def span_id() -> str:
