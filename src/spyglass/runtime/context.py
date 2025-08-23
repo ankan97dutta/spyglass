@@ -9,55 +9,54 @@ from __future__ import annotations
 from collections.abc import Iterator
 from contextlib import contextmanager
 from contextvars import ContextVar, Token
-from typing import Optional
 
 __all__ = [
-    "get_trace_id",
     "get_span_id",
-    "set_trace_id",
-    "set_span_id",
-    "reset_trace_id",
+    "get_trace_id",
     "reset_span_id",
+    "reset_trace_id",
+    "set_span_id",
+    "set_trace_id",
     "use_span",
 ]
 
 # None means "unset". Keep defaults at module import for speed; ContextVar is async-safe.
-_TRACE_ID: ContextVar[Optional[str]] = ContextVar("spyglass_trace_id", default=None)
-_SPAN_ID: ContextVar[Optional[str]] = ContextVar("spyglass_span_id", default=None)
+_TRACE_ID: ContextVar[str | None] = ContextVar("spyglass_trace_id", default=None)
+_SPAN_ID: ContextVar[str | None] = ContextVar("spyglass_span_id", default=None)
 
 
 # --- Getters ---
-def get_trace_id() -> Optional[str]:
+def get_trace_id() -> str | None:
     return _TRACE_ID.get()
 
 
-def get_span_id() -> Optional[str]:
+def get_span_id() -> str | None:
     return _SPAN_ID.get()
 
 
 # --- Setters returning tokens for manual reset ---
-def set_trace_id(value: Optional[str]) -> Token[Optional[str]]:
+def set_trace_id(value: str | None) -> Token[str | None]:
     return _TRACE_ID.set(value)
 
 
-def set_span_id(value: Optional[str]) -> Token[Optional[str]]:
+def set_span_id(value: str | None) -> Token[str | None]:
     return _SPAN_ID.set(value)
 
 
 # --- Reset helpers ---
 
 
-def reset_trace_id(token: Token[Optional[str]]) -> None:
+def reset_trace_id(token: Token[str | None]) -> None:
     _TRACE_ID.reset(token)
 
 
-def reset_span_id(token: Token[Optional[str]]) -> None:
+def reset_span_id(token: Token[str | None]) -> None:
     _SPAN_ID.reset(token)
 
 
 # --- Ergonomic context manager ---
 @contextmanager
-def use_span(trace_id: Optional[str] = None, span_id: Optional[str] = None) -> Iterator[None]:
+def use_span(trace_id: str | None = None, span_id: str | None = None) -> Iterator[None]:
     """Temporarily set trace/span IDs (async-safe). Resets on exit.
 
 

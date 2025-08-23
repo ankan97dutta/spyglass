@@ -22,13 +22,13 @@ from .context import (
 from .ids import span_id
 
 __all__ = [
-    "span_id",
-    "now_ns",
-    "get_trace_id",
     "get_span_id",
-    "set_trace_id",
-    "set_span_id",
-    "reset_trace_id",
+    "get_trace_id",
+    "now_ns",
     "reset_span_id",
+    "reset_trace_id",
+    "set_span_id",
+    "set_trace_id",
+    "span_id",
     "use_span",
 ]
