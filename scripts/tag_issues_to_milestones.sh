@@ -34,7 +34,7 @@ assign_to_milestone() {
   local issue_number="$1"
   local milestone_number="$2"
   local milestone_title="$3"
-  
+
   if [[ -n "$milestone_number" ]]; then
     echo "➕ Assigning issue #$issue_number to milestone: $milestone_title"
     gh api "repos/${GH_OWNER}/${GH_REPO}/issues/$issue_number" \
@@ -54,10 +54,10 @@ map_issue_to_milestone() {
   local issue_number="$1"
   local title="$2"
   local labels="$3"
-  
+
   # Convert labels to lowercase for easier matching
   local labels_lower=$(echo "$labels" | tr '[:upper:]' '[:lower:]')
-  
+
   # v0.1.0 – Core + Flask + SQLAlchemy + UI
   if [[ "$labels_lower" =~ "type:core" ]] || \
      [[ "$labels_lower" =~ "area:flask" ]] || \
@@ -69,7 +69,7 @@ map_issue_to_milestone() {
     echo "v0.1.0 – Core + Flask + SQLAlchemy + UI"
     return 0
   fi
-  
+
   # v0.2.0 – pyodbc + Mongo + Neo4j
   if [[ "$labels_lower" =~ "type:db" ]] || \
      [[ "$title" =~ [Mm]ongo ]] || \
@@ -78,7 +78,7 @@ map_issue_to_milestone() {
     echo "v0.2.0 – pyodbc + Mongo + Neo4j"
     return 0
   fi
-  
+
   # v0.3.0 – ASGI/FastAPI + Sanic
   if [[ "$labels_lower" =~ "type:adapter" ]] || \
      [[ "$title" =~ [Aa]SGI ]] || \
@@ -87,7 +87,7 @@ map_issue_to_milestone() {
     echo "v0.3.0 – ASGI/FastAPI + Sanic"
     return 0
   fi
-  
+
   # v0.4.0 – Sampling/Prometheus/Resilience
   if [[ "$labels_lower" =~ "type:exporter" ]] || \
      [[ "$labels_lower" =~ "type:perf" ]] || \
@@ -97,7 +97,7 @@ map_issue_to_milestone() {
     echo "v0.4.0 – Sampling/Prometheus/Resilience"
     return 0
   fi
-  
+
   # v1.0.0 – Benchmarks + Docs Hardening
   if [[ "$title" =~ [Bb]enchmark ]] || \
      [[ "$title" =~ [Dd]oc ]] || \
@@ -107,7 +107,7 @@ map_issue_to_milestone() {
     echo "v1.0.0 – Benchmarks + Docs Hardening"
     return 0
   fi
-  
+
   # Default to v0.1.0 for core infrastructure
   echo "v0.1.0 – Core + Flask + SQLAlchemy + UI"
 }
@@ -117,15 +117,15 @@ echo "🏷️  Processing issues and assigning to milestones..."
 echo "$ISSUES" | jq -r '.[] | "\(.number)|\(.title)|\([.labels[].name] | join(","))"' | while IFS='|' read -r number title labels; do
   echo "📝 Issue #$number: $title"
   echo "   Labels: $labels"
-  
+
   # Map issue to milestone
   milestone_title=$(map_issue_to_milestone "$number" "$title" "$labels")
   echo "   → Milestone: $milestone_title"
-  
+
   # Get milestone ID and assign
   milestone_id=$(get_milestone_id "$milestone_title")
   assign_to_milestone "$number" "$milestone_id" "$milestone_title"
-  
+
   echo "---"
 done
 

@@ -1,0 +1,57 @@
+[project]
+name = "spyglass"
+version = "0.1.0"
+description = "High performance, non blocking profiler for Python web apps."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Ankan Dutta" }]
+dependencies = []
+
+# Optional extras; keep runtime deps light in core
+[project.optional-dependencies]
+flask = ["flask>=3.0"]
+fastapi = ["fastapi>=0.110", "starlette>=0.37"]
+sanic = ["sanic>=23.0"]
+sqlalchemy = ["sqlalchemy>=2.0"]
+pyodbc = ["pyodbc"]
+mongo = ["pymongo>=4.3", "motor>=3.3"]
+neo4j = ["neo4j>=5.14"]
+perf = ["orjson>=3.8"]
+all = [
+  "flask>=3.0",
+  "fastapi>=0.110","starlette>=0.37",
+  "sanic>=23.0",
+  "sqlalchemy>=2.0",
+  "pyodbc",
+  "pymongo>=4.3","motor>=3.3",
+  "neo4j>=5.14",
+  "orjson>=3.8"
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+addopts = "-q"
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+lint.select = ["E","F","I","UP","B","SIM","PL","RUF"]
+lint.ignore = ["E501"]  # handled by formatter; keep code readable
+format.quote-style = "double"
+format.indent-style = "space"
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+warn_unreachable = true
+warn_unused_ignores = true
+warn_return_any = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+plugins = []
+mypy_path = "src"
