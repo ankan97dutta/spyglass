@@ -31,6 +31,7 @@ all = [
 dev = [
   "pytest>=7.0",
   "pytest-cov>=4.0",
+  "pytest-asyncio>=0.21.0",
   "mypy>=1.0",
   "ruff>=0.1.0",
   "black>=23.0",
@@ -44,12 +45,13 @@ build-backend = "setuptools.build_meta"
 [tool.pytest.ini_options]
 addopts = "-q"
 pythonpath = ["src"]
+asyncio_mode = "auto"
 
 [tool.ruff]
 line-length = 100
 target-version = "py39"
 lint.select = ["E","F","I","UP","B","SIM","PL","RUF"]
-lint.ignore = ["E501"]  # handled by formatter; keep code readable
+lint.ignore = ["E501", "UP007"]  # handled by formatter; keep code readable; ignore union syntax preference
 format.quote-style = "double"
 format.indent-style = "space"
 
@@ -63,3 +65,5 @@ disallow_any_generics = true
 disallow_subclassing_any = true
 plugins = []
 mypy_path = "src"
+ignore_missing_imports = true
+disable_error_code = ["misc"]
