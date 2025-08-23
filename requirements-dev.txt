@@ -1,0 +1,13 @@
+# Development dependencies for Spyglass
+# Install with: pip install -r requirements-dev.txt
+
+# Core development tools
+pytest>=7.0
+pytest-cov>=4.0
+mypy>=1.0
+ruff>=0.1.0
+black>=23.0
+pre-commit>=3.0
+
+# Install the package in editable mode
+-e .
