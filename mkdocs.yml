@@ -16,7 +16,7 @@ markdown_extensions:
   - md_in_html
 plugins:
   - search
-  - mkdocs-mermaid2
+  - mermaid2
 nav:
   - Home: index.md
   - Overview:
