@@ -9,6 +9,7 @@ Configuration:
 - flush_interval (float): seconds between periodic flush attempts (default 0.5s)
 - batch_max (int): maximum batch size per sink call (default 256)
 """
+
 from __future__ import annotations
 
 import atexit
@@ -49,9 +50,7 @@ class AsyncCollector(Generic[T]):
         self._lock = threading.Lock()
         self._wakeup = threading.Event()
         self._stop = threading.Event()
-        self._thread = threading.Thread(
-            target=self._run, name=name, daemon=True
-        )
+        self._thread = threading.Thread(target=self._run, name=name, daemon=True)
 
         # Stats (best-effort; not locked on read)
         self.enqueued = 0
