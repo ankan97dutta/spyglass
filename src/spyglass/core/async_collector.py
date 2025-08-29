@@ -91,6 +91,14 @@ class AsyncCollector(Generic[T]):
             self._thread.join(timeout=timeout)
             # Final drain regardless of join result
             self._drain_all()
+            # Close the sink if it has a close method
+            if hasattr(self._sink, "close"):
+                with contextlib.suppress(Exception):
+                    self._sink.close()
+            # Also try to call finalize if the sink has that method (for JSONL exporter)
+            if hasattr(self._sink, "finalize"):
+                with contextlib.suppress(Exception):
+                    self._sink.finalize()
 
     # ------------------------- Internal ----------------------------
     def _atexit(self) -> None:
