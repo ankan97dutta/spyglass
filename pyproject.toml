@@ -10,7 +10,7 @@ dependencies = []
 
 # Optional extras; keep runtime deps light in core
 [project.optional-dependencies]
-flask = ["flask>=3.0"]
+flask = ["flask[async]>=3.0"]
 fastapi = ["fastapi>=0.110", "starlette>=0.37"]
 sanic = ["sanic>=23.0"]
 sqlalchemy = ["sqlalchemy>=2.0"]
@@ -19,7 +19,7 @@ mongo = ["pymongo>=4.3", "motor>=3.3"]
 neo4j = ["neo4j>=5.14"]
 perf = ["orjson>=3.8"]
 all = [
-  "flask>=3.0",
+  "flask[async]>=3.0",
   "fastapi>=0.110","starlette>=0.37",
   "sanic>=23.0",
   "sqlalchemy>=2.0",
