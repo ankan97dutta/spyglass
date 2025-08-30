@@ -5,17 +5,20 @@
 > A high performance, non-blocking profiler for Python web applications.
 
 [![Docs](https://github.com/ankan97dutta/spyglass/actions/workflows/docs.yml/badge.svg)](https://ankan97dutta.github.io/spyglass/)
-
+[![CI](https://github.com/ankan97dutta/spyglass/actions/workflows/ci.yml/badge.svg)](https://github.com/ankan97dutta/spyglass/actions/workflows/ci.yml)
 ---
 
 ## Overview
 
 Spyglass provides drop-in observability across APIs, functions, and database queries with minimal performance impact. It's designed to be:
 
-- **Non-blocking**: Async collection with configurable batching and backpressure handling
+- **Non blocking**: Async collection with configurable batching and backpressure handling
 - **Framework agnostic**: Works with Flask, FastAPI, Sanic, and custom applications
 - **Database aware**: Built-in support for SQLAlchemy, pyodbc, MongoDB, and Neo4j
 - **Production ready**: Configurable sampling, error tracking, and multiple export formats
+
+<img width="1138" height="627" alt="Screenshot 2025-08-30 at 1 33 08 PM" src="https://github.com/user-attachments/assets/41e3e9fa-7756-462d-a67b-cc988605c5dd" />
+
 
 ## Features
 
@@ -26,6 +29,7 @@ Spyglass provides drop-in observability across APIs, functions, and database que
 - **Multiple Exporters**: JSONL (with rotation), Console, Prometheus, OTLP
 - **Runtime Context**: Distributed tracing with trace/span ID management
 - **Configurable Sampling**: Control data collection volume in production
+
 
 ## Installation
 
