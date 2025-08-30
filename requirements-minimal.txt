@@ -1,0 +1,12 @@
+# Spyglass Minimal Dependencies
+# Install with: pip install -r requirements-minimal.txt
+# This includes only the core dependencies needed for basic profiling
+
+# Core dependencies (always required)
+typing_extensions>=4.0
+
+# Note: This minimal setup only supports manual profiling with Emitter
+# For framework integration, use the appropriate requirements file:
+# - requirements-flask.txt for Flask support
+# - requirements-sqlalchemy.txt for database profiling
+# - requirements-all.txt for everything

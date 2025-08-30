@@ -1,11 +1,280 @@
 # Configuration
 
-Key options:
-- `enabled` (bool)
-- `sample_rate` (0.0..1.0)
-- `route_exclude` (list/prefix/regex)
-- `non_blocking` (default: true)
-- `queue_size`, `flush_interval_s`, `batch_max`
-- `exporter` (jsonl|prometheus|otlp)
-- `jsonl_path`, rotation size/time
-- `ui_enabled`, `ui_prefix`, `ui_auth_token`
+Spyglass provides extensive configuration options for tuning performance, controlling data collection, and customizing behavior.
+
+## Core Configuration
+
+### AsyncCollector Settings
+
+The `AsyncCollector` is the heart of Spyglass's non-blocking architecture:
+
+```python
+from spyglass.core.async_collector import AsyncCollector
+
+collector = AsyncCollector(
+    exporter,
+    queue_size=2048,        # Maximum events in memory
+    batch_max=128,          # Maximum events per batch
+    flush_interval=0.1,     # Flush interval in seconds
+    drop_oldest=True        # Drop events under backpressure
+)
+```
+
+**Key Parameters:**
+- **`queue_size`**: Maximum number of events that can be queued (default: 2048)
+- **`batch_max`**: Maximum events per batch for efficient processing (default: 128)
+- **`flush_interval`**: How often to flush events to exporters (default: 0.1s)
+- **`drop_oldest`**: Whether to drop old events under backpressure (default: True)
+
+### Performance Tuning
+
+#### High-Throughput Configuration
+```python
+# For high-volume applications
+collector = AsyncCollector(
+    exporter,
+    queue_size=8192,        # Large queue for high concurrency
+    batch_max=256,          # Larger batches for efficiency
+    flush_interval=0.05,    # More frequent flushing
+    drop_oldest=True        # Drop events under backpressure
+)
+```
+
+#### Low-Latency Configuration
+```python
+# For low-latency requirements
+collector = AsyncCollector(
+    exporter,
+    queue_size=512,         # Smaller queue for lower latency
+    batch_max=32,           # Smaller batches for faster processing
+    flush_interval=0.01,    # Very frequent flushing
+    drop_oldest=False       # Don't drop events
+)
+```
+
+## Framework-Specific Configuration
+
+### Flask Adapter
+
+```python
+from spyglass.flask.adapter import SpyglassFlask
+
+spyglass = SpyglassFlask(
+    app,
+    collector=collector,
+    exclude_routes=["/health", "/metrics", "/static"],  # Routes to ignore
+    sample=0.1  # Sample 10% of requests
+)
+```
+
+**Configuration Options:**
+- **`collector`**: Required AsyncCollector instance
+- **`exclude_routes`**: List of route prefixes to exclude from profiling
+- **`sample`**: Sampling rate from 0.0 (0%) to 1.0 (100%)
+
+### Route Exclusion Patterns
+
+```python
+# Exclude health and monitoring endpoints
+exclude_routes = [
+    "/health",
+    "/metrics",
+    "/_spyglass",  # Built-in dashboard
+    "/static",     # Static assets
+    "/admin"       # Admin routes
+]
+
+spyglass = SpyglassFlask(app, collector=collector, exclude_routes=exclude_routes)
+```
+
+## Sampling Configuration
+
+### Random Sampling
+```python
+# Sample 5% of requests in production
+spyglass = SpyglassFlask(app, collector=collector, sample=0.05)
+
+# Sample 100% in development
+spyglass = SpyglassFlask(app, collector=collector, sample=1.0)
+```
+
+### Route-Based Sampling
+```python
+# Different sampling rates for different route patterns
+spyglass = SpyglassFlask(
+    app,
+    collector=collector,
+    exclude_routes=["/health", "/metrics"],  # Always exclude
+    sample=0.1  # 10% sampling for all other routes
+)
+```
+
+## Exporter Configuration
+
+### JSONL Exporter
+
+```python
+from spyglass.exporters.jsonl import JSONLExporter
+
+exporter = JSONLExporter(
+    dir="./logs",                    # Output directory
+    rotate_bytes=1024*1024,         # Rotate at 1MB
+    rotate_secs=3600,               # Rotate every hour
+    filename_template="spyglass-{timestamp}.jsonl"
+)
+```
+
+**Rotation Options:**
+- **`rotate_bytes`**: Rotate when file reaches this size
+- **`rotate_secs`**: Rotate after this many seconds
+- **`dir`**: Output directory for log files
+- **`filename_template`**: Custom filename pattern
+
+### Console Exporter
+
+```python
+from spyglass.exporters.console import ConsoleExporter
+
+# Pretty-printed output for development
+exporter = ConsoleExporter(pretty=True)
+
+# Compact output for production
+exporter = ConsoleExporter(pretty=False)
+```
+
+## Environment Variables
+
+Configure Spyglass behavior through environment variables:
+
+```bash
+# Enable debug mode
+export SPYGLASS_DEBUG=1
+
+# Set default log directory
+export SPYGLASS_LOG_DIR=/var/log/spyglass
+
+# Configure sampling rate (0.0 to 1.0)
+export SPYGLASS_SAMPLE_RATE=0.1
+
+# Set queue size
+export SPYGLASS_QUEUE_SIZE=4096
+
+# Set batch size
+export SPYGLASS_BATCH_MAX=256
+
+# Set flush interval
+export SPYGLASS_FLUSH_INTERVAL=0.05
+```
+
+## Runtime Context Configuration
+
+### Trace and Span Management
+
+```python
+from spyglass.runtime import use_span, span_id, get_trace_id, get_span_id
+
+# Create distributed trace context
+with use_span(trace_id="trace-123", span_id="span-456"):
+    current_trace = get_trace_id()  # "trace-123"
+    current_span = get_span_id()    # "span-456"
+
+    # Nested spans inherit trace context
+    with use_span(span_id="span-789"):
+        nested_span = get_span_id()  # "span-789"
+        parent_trace = get_trace_id() # "trace-123"
+```
+
+## Dashboard Configuration
+
+### UI Blueprint Settings
+
+```python
+from spyglass.flask.ui import make_ui_blueprint
+from spyglass.core.stats import StatsStore
+
+# Configure stats store
+stats = StatsStore(
+    window_minutes=15,      # Rolling window size
+    max_errors=100          # Maximum errors to track
+)
+
+# Mount dashboard with custom settings
+ui_bp = make_ui_blueprint(
+    stats,
+    ui_prefix="/_spyglass",     # URL prefix
+    ui_auth_token="secret123"   # Optional authentication
+)
+app.register_blueprint(ui_bp)
+```
+
+## Production Configuration
+
+### Recommended Production Settings
+
+```python
+# Production-ready configuration
+exporter = JSONLExporter(
+    dir="/var/log/spyglass",
+    rotate_bytes=100*1024*1024,  # 100MB files
+    rotate_secs=86400            # Daily rotation
+)
+
+collector = AsyncCollector(
+    exporter,
+    queue_size=4096,        # Larger queue for production
+    batch_max=256,          # Larger batches
+    flush_interval=0.1,     # 100ms flush interval
+    drop_oldest=True        # Drop under pressure
+)
+
+spyglass = SpyglassFlask(
+    app,
+    collector=collector,
+    exclude_routes=["/health", "/metrics", "/_spyglass"],
+    sample=0.1              # 10% sampling in production
+)
+```
+
+### Monitoring and Alerting
+
+```python
+# Add custom monitoring
+import logging
+
+logger = logging.getLogger(__name__)
+
+def monitor_collector(collector):
+    """Monitor collector health"""
+    if collector.queue_size > collector.queue.maxsize * 0.8:
+        logger.warning("Collector queue is 80% full")
+
+    if collector.dropped_events > 0:
+        logger.error(f"Collector dropped {collector.dropped_events} events")
+```
+
+## Configuration Validation
+
+Spyglass validates configuration at runtime:
+
+```python
+# Invalid sampling rate will raise ValueError
+try:
+    spyglass = SpyglassFlask(app, collector=collector, sample=1.5)
+except ValueError as e:
+    print(f"Invalid configuration: {e}")
+
+# Invalid queue size will raise ValueError
+try:
+    collector = AsyncCollector(exporter, queue_size=0)
+except ValueError as e:
+    print(f"Invalid configuration: {e}")
+```
+
+## Best Practices
+
+1. **Start Conservative**: Begin with default settings and tune based on your needs
+2. **Monitor Queue Size**: Watch for queue backpressure in production
+3. **Use Sampling in Production**: Start with 10% sampling and adjust based on volume
+4. **Exclude Health Endpoints**: Always exclude monitoring endpoints from profiling
+5. **Configure Log Rotation**: Set appropriate rotation policies for your log storage
+6. **Test Performance Impact**: Measure overhead in your specific environment

@@ -1,0 +1,15 @@
+# Spyglass SQLAlchemy Dependencies
+# Install with: pip install -r requirements-sqlalchemy.txt
+# This includes core + SQLAlchemy integration
+
+# Core dependencies
+typing_extensions>=4.0
+
+# SQLAlchemy integration
+sqlalchemy>=2.0
+aiosqlite
+greenlet
+
+# Note: For web framework integration, also install:
+# Flask: pip install flask[async]>=3.0
+# FastAPI: pip install fastapi>=0.110 starlette>=0.37

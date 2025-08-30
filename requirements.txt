@@ -1,0 +1,11 @@
+# Spyglass Core Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core dependencies (always required)
+typing_extensions>=4.0
+
+# Optional: Install specific extras as needed
+# Flask support: pip install flask[async]>=3.0
+# SQLAlchemy support: pip install sqlalchemy>=2.0 aiosqlite greenlet
+# Performance: pip install orjson>=3.8
+# All integrations: pip install -r requirements-all.txt

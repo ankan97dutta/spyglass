@@ -1,0 +1,34 @@
+# Spyglass All Dependencies
+# Install with: pip install -r requirements-all.txt
+# This includes all framework and database integrations
+
+# Core dependencies
+typing_extensions>=4.0
+
+# Flask integration
+flask[async]>=3.0
+
+# FastAPI integration
+fastapi>=0.110
+starlette>=0.37
+
+# Sanic integration
+sanic>=23.0
+
+# SQLAlchemy integration
+sqlalchemy>=2.0
+aiosqlite
+greenlet
+
+# pyodbc integration
+pyodbc
+
+# MongoDB integration
+pymongo>=4.3
+motor>=3.3
+
+# Neo4j integration
+neo4j>=5.14
+
+# Performance optimization
+orjson>=3.8

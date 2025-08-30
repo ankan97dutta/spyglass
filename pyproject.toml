@@ -4,9 +4,11 @@ version = "0.1.0"
 description = "High performance, non blocking profiler for Python web apps."
 readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "MIT" }
+license = "MIT"
 authors = [{ name = "Ankan Dutta" }]
-dependencies = []
+dependencies = [
+    "typing_extensions>=4.0",  # Required for ParamSpec in profile decorator
+]
 
 # Optional extras; keep runtime deps light in core
 [project.optional-dependencies]

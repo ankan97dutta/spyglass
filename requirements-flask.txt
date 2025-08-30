@@ -1,0 +1,12 @@
+# Spyglass Flask Dependencies
+# Install with: pip install -r requirements-flask.txt
+# This includes core + Flask integration
+
+# Core dependencies
+typing_extensions>=4.0
+
+# Flask integration
+flask[async]>=3.0
+
+# Note: For database profiling, also install:
+# pip install sqlalchemy>=2.0 aiosqlite greenlet
