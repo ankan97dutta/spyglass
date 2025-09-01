@@ -18,8 +18,8 @@ try:  # SQLAlchemy 1.4/2.x async engine
 except Exception:  # pragma: no cover
     AsyncEngine = None  # type: ignore
 
-from spyglass.core.emitter import Emitter
-from spyglass.runtime import now_ns
+from profilis.core.emitter import Emitter
+from profilis.runtime import now_ns
 
 __all__ = [
     "instrument_async_engine",
@@ -65,13 +65,13 @@ def instrument_engine(
     def _before(  # noqa: PLR0913
         conn: Any, cursor: Any, statement: Any, parameters: Any, context: Any, executemany: Any
     ) -> None:
-        context._spyglass_start_ns = now_ns()  # type: ignore[attr-defined]
+        context._profilis_start_ns = now_ns()  # type: ignore[attr-defined]
 
     @event.listens_for(engine, "after_cursor_execute")
     def _after(  # noqa: PLR0913
         conn: Any, cursor: Any, statement: Any, parameters: Any, context: Any, executemany: Any
     ) -> None:
-        start_ns = getattr(context, "_spyglass_start_ns", None)
+        start_ns = getattr(context, "_profilis_start_ns", None)
         if start_ns is None:
             return
 
@@ -81,8 +81,8 @@ def instrument_engine(
             rows = getattr(cursor, "rowcount", -1)
             emitter.emit_db(stmt, dur_ns=dur, rows=int(rows) if rows is not None else -1)
         finally:
-            if hasattr(context, "_spyglass_start_ns"):
-                delattr(context, "_spyglass_start_ns")
+            if hasattr(context, "_profilis_start_ns"):
+                delattr(context, "_profilis_start_ns")
 
 
 def instrument_async_engine(

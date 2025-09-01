@@ -57,7 +57,7 @@ issue "FastAPI adapter (thin on top of ASGI)" \
 issue "Sanic adapter (native) + optional ASGI UI mount" \
 "### Subtasks
 - Sanic request/response middleware; exception capture
-- Optionally mount ASGI UI at /\_spyglass
+- Optionally mount ASGI UI at /\_profilis
 - Docs: example app
 
 ### Acceptance

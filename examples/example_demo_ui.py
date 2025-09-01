@@ -1,15 +1,15 @@
 # File: scripts/demo_ui.py
 """
-Demo: Spyglass built-in UI with live data.
+Demo: Profilis built-in UI with live data.
 
 Run:
   uv run python scripts/demo_ui.py
 
 Open:
-  http://127.0.0.1:5000/spy/?token=secret123   (auth enabled)
+  http://127.0.0.1:5000/profilis/?token=secret123   (auth enabled)
 
 What this demo does:
-- Registers the built-in UI blueprint at /spy
+- Registers the built-in UI blueprint at /profilis
 - Records *real* per-request latencies into StatsStore using Flask hooks
 - Simulates background traffic so the dashboard is not blank when idle
 - Records recent errors into the error ring (shown on the dashboard)
@@ -25,8 +25,8 @@ from typing import Union
 
 from flask import Flask, Response, g, jsonify, request
 
-from spyglass.core.stats import StatsStore
-from spyglass.flask.ui import ErrorItem, make_ui_blueprint, record_error
+from profilis.core.stats import StatsStore
+from profilis.flask.ui import ErrorItem, make_ui_blueprint, record_error
 
 # Constants
 HTTP_SERVER_ERROR = 500
@@ -36,8 +36,8 @@ ERROR_RATE = 0.1
 app = Flask(__name__)
 stats = StatsStore()  # 15-minute rolling window by default
 
-# Mount UI under /spy with a demo bearer token
-bp = make_ui_blueprint(stats, ui_prefix="/spy")
+# Mount UI under /profilis with a demo bearer token
+bp = make_ui_blueprint(stats, ui_prefix="/profilis")
 app.register_blueprint(bp)
 
 

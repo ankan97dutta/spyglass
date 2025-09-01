@@ -2,9 +2,9 @@ import math
 import time
 from typing import Any
 
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.core.emitter import Emitter
-from spyglass.core.stats import PERCENT_MAX, SPARKLINE_BINS, StatsStore
+from profilis.core.async_collector import AsyncCollector
+from profilis.core.emitter import Emitter
+from profilis.core.stats import PERCENT_MAX, SPARKLINE_BINS, StatsStore
 
 
 def test_stats_percentiles_properties() -> None:

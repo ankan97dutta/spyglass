@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.runtime import get_span_id, get_trace_id, now_ns
+from profilis.core.async_collector import AsyncCollector
+from profilis.runtime import get_span_id, get_trace_id, now_ns
 
 __all__ = ["Emitter"]
 

@@ -6,8 +6,8 @@ from typing import Any
 
 from flask import Flask, abort
 
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.flask.adapter import SpyglassFlask
+from profilis.core.async_collector import AsyncCollector
+from profilis.flask.adapter import ProfilisFlask
 
 # HTTP status code constants
 HTTP_OK = 200
@@ -36,7 +36,7 @@ def test_flask_requests_200_400_500_and_static() -> None:
 
     sink = _Sink()
     col = AsyncCollector(sink, queue_size=256, flush_interval=0.01, batch_max=64)
-    SpyglassFlask(app, collector=col, exclude_routes=["/health", "/metrics"], sample=1.0)
+    ProfilisFlask(app, collector=col, exclude_routes=["/health", "/metrics"], sample=1.0)
 
     @app.route("/ok")
     def ok() -> dict[str, bool]:
@@ -54,7 +54,7 @@ def test_flask_requests_200_400_500_and_static() -> None:
     assert client.get("/ok").status_code == HTTP_OK
     assert client.get("/bad").status_code == HTTP_BAD_REQUEST
 
-    # Don't catch the exception - let Flask handle it so Spyglass can capture it
+    # Don't catch the exception - let Flask handle it so Profilis can capture it
     response = client.get("/boom")
     assert (
         response.status_code == HTTP_INTERNAL_SERVER_ERROR
@@ -91,7 +91,7 @@ def test_async_view() -> None:
     app = Flask(__name__)
     sink = _Sink()
     col = AsyncCollector(sink, queue_size=64, flush_interval=0.01, batch_max=16)
-    SpyglassFlask(app, collector=col, sample=1.0)
+    ProfilisFlask(app, collector=col, sample=1.0)
 
     @app.route("/await")
     async def awaiter() -> dict[str, bool]:

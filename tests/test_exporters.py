@@ -6,12 +6,12 @@ import time
 from io import StringIO
 from typing import Any
 
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.exporters.console import ConsoleExporter
-from spyglass.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
+from profilis.exporters.console import ConsoleExporter
+from profilis.exporters.jsonl import JSONLExporter
 
-# regex: spyglass-YYYYmmdd-HHMMSS.jsonl (no backslashes to avoid canvas escaping)
-ROT_RE = re.compile("^spyglass-[0-9]{8}-[0-9]{6}[.]jsonl$")
+# regex: profilis-YYYYmmdd-HHMMSS.jsonl (no backslashes to avoid canvas escaping)
+ROT_RE = re.compile("^profilis-[0-9]{8}-[0-9]{6}[.]jsonl$")
 
 # Test constants
 TEST_DURATION = 0.5  # seconds

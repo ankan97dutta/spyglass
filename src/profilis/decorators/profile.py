@@ -5,7 +5,7 @@
 - Records exceptions (exception_type on FN_META) and re-raises
 
 Usage:
-    from spyglass.decorators.profile import profile_function
+    from profilis.decorators.profile import profile_function
 
     collector = AsyncCollector(JSONLExporter(...))
     emitter = Emitter(collector)
@@ -28,8 +28,8 @@ from typing import Callable, TypeVar
 
 from typing_extensions import ParamSpec
 
-from spyglass.core.emitter import Emitter
-from spyglass.runtime import get_span_id, get_trace_id, now_ns, span_id, use_span
+from profilis.core.emitter import Emitter
+from profilis.runtime import get_span_id, get_trace_id, now_ns, span_id, use_span
 
 P = ParamSpec("P")
 T = TypeVar("T")

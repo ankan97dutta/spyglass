@@ -16,8 +16,8 @@ import json
 import os
 from dataclasses import asdict, dataclass
 
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.runtime import get_span_id, get_trace_id, now_ns, span_id, use_span
+from profilis.core.async_collector import AsyncCollector
+from profilis.runtime import get_span_id, get_trace_id, now_ns, span_id, use_span
 
 
 # -------------------- Event model --------------------

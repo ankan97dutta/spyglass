@@ -1,4 +1,4 @@
-# Spyglass Flask Dependencies
+# Profilis Flask Dependencies
 # Install with: pip install -r requirements-flask.txt
 # This includes core + Flask integration
 

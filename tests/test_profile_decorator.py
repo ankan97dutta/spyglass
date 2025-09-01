@@ -3,10 +3,10 @@ import time
 from contextlib import suppress
 from typing import Any
 
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.core.emitter import Emitter
-from spyglass.decorators.profile import profile_function
-from spyglass.runtime import span_id, use_span
+from profilis.core.async_collector import AsyncCollector
+from profilis.core.emitter import Emitter
+from profilis.decorators.profile import profile_function
+from profilis.runtime import span_id, use_span
 
 # Constants for test values
 EXPECTED_RESULT = 42

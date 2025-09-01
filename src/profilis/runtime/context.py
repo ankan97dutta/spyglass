@@ -21,8 +21,8 @@ __all__ = [
 ]
 
 # None means "unset". Keep defaults at module import for speed; ContextVar is async-safe.
-_TRACE_ID: ContextVar[str | None] = ContextVar("spyglass_trace_id", default=None)
-_SPAN_ID: ContextVar[str | None] = ContextVar("spyglass_span_id", default=None)
+_TRACE_ID: ContextVar[str | None] = ContextVar("profilis_trace_id", default=None)
+_SPAN_ID: ContextVar[str | None] = ContextVar("profilis_span_id", default=None)
 
 
 # --- Getters ---

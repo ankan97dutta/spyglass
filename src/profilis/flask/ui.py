@@ -15,7 +15,7 @@ from dataclasses import asdict, dataclass
 
 from flask import Blueprint, Response, abort, request
 
-from spyglass.core.stats import StatsStore
+from profilis.core.stats import StatsStore
 
 
 # ---------------- Error ring (in-memory) ----------------
@@ -60,7 +60,7 @@ _HTML = """<!DOCTYPE html>
 <head>
   <meta charset=\"UTF-8\" />
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
-  <title>Spyglass Metrics</title>
+  <title>Profilis Metrics</title>
   <style>
     :root { --bg:#0b1220; --card:#121a2b; --muted:#789; --fg:#eaf1ff; --accent:#6aa1ff; --bad:#ff6b6b; --ok:#4cd964; }
     :root.light { --bg:#f7f9ff; --card:#ffffff; --muted:#50607a; --fg:#0b1220; --accent:#2a66ff; --bad:#d94141; --ok:#198754; }
@@ -90,12 +90,12 @@ _HTML = """<!DOCTYPE html>
   <script src=\"https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js\"></script>
   <script>
     // Theme handling
-    function setTheme(t){ document.documentElement.classList.toggle('light', t==='light'); localStorage.setItem('spy_theme', t); }
-    function toggleTheme(){ const t = localStorage.getItem('spy_theme')==='light' ? 'dark' : 'light'; setTheme(t); }
-    (function(){ setTheme(localStorage.getItem('spy_theme') || (window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark')); })();
+    function setTheme(t){ document.documentElement.classList.toggle('light', t==='light'); localStorage.setItem('profilis_theme', t); }
+    function toggleTheme(){ const t = localStorage.getItem('profilis_theme')==='light' ? 'dark' : 'light'; setTheme(t); }
+    (function(){ setTheme(localStorage.getItem('profilis_theme') || (window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark')); })();
 
     // Auth token helper
-    const tokenKey='spy_token';
+    const tokenKey='profilis_token';
     (function persistToken(){const u=new URL(window.location.href);const t=u.searchParams.get('token');if(t){localStorage.setItem(tokenKey,t)}})();
     function authHeaders(){ const t=localStorage.getItem(tokenKey); return t? {Authorization:'Bearer '+t}: {}; }
 
@@ -184,7 +184,7 @@ _HTML = """<!DOCTYPE html>
       let title, body, labels;
 
       if(type === 'bug') {
-        title = "Bug Report from Spyglass Dashboard";
+        title = "Bug Report from Profilis Dashboard";
         labels = "bug";
         body = `## Bug Report
 
@@ -210,9 +210,9 @@ What actually happened?
 Any other information that might be helpful:
 
 ---
-*This report was generated automatically from the Spyglass dashboard.*`;
+*This report was generated automatically from the Profilis dashboard.*`;
       } else {
-        title = "Feature Request from Spyglass Dashboard";
+        title = "Feature Request from Profilis Dashboard";
         labels = "enhancement";
         body = `## Feature Request
 
@@ -233,7 +233,7 @@ Any ideas on how this could be implemented?
 Any other information that might be helpful:
 
 ---
-*This request was generated automatically from the Spyglass dashboard.*`;
+*This request was generated automatically from the Profilis dashboard.*`;
       }
 
       // Encode for GitHub
@@ -243,7 +243,7 @@ Any other information that might be helpful:
 
       // Open GitHub issues page with pre-filled content and labels
       // TODO: Update this URL to point to your own repository
-      const githubUrl = `https://github.com/ankan97dutta/spyglass/issues/new?title=${encodedTitle}&body=${encodedBody}&labels=${encodedLabels}`;
+      const githubUrl = `https://github.com/ankan97dutta/profilis/issues/new?title=${encodedTitle}&body=${encodedBody}&labels=${encodedLabels}`;
       window.open(githubUrl, '_blank');
     }
   </script>
@@ -266,7 +266,7 @@ Any other information that might be helpful:
 
       <svg width="32" height="32" viewBox="0 0 512 512"
             xmlns="http://www.w3.org/2000/svg">
-        <!-- Spyglass: Cool Tech Palette -->
+        <!-- Profilis: Cool Tech Palette -->
 
         <!-- Outer ring -->
         <circle cx="256" cy="256" r="180" stroke="#2E3440" stroke-width="28" fill="none"/>
@@ -284,7 +284,7 @@ Any other information that might be helpful:
                 transform="rotate(45 356 356)" fill="#2E3440"/>
         </svg>
 
-      <h1>Spyglass</h1>
+      <h1>Profilis</h1>
       <span class=\"muted\" style=\"margin-left:auto\">Status: <strong id=\"status\">—</strong></span>
       <span class="timestamp">Last update: <span id="lastUpdate">—</span> | Refresh in <span id="countdown">4</span>s</span>
       <div style="display:flex;gap:6px;margin-left:auto">
@@ -341,7 +341,7 @@ Any other information that might be helpful:
 def make_ui_blueprint(
     stats: StatsStore, *, bearer_token: str | None = None, ui_prefix: str = ""
 ) -> Blueprint:
-    bp = Blueprint("spyglass_ui", __name__, url_prefix=ui_prefix)
+    bp = Blueprint("profilis_ui", __name__, url_prefix=ui_prefix)
 
     def _check_auth() -> None:
         if bearer_token is None:

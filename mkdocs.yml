@@ -1,5 +1,5 @@
-site_name: Spyglass
-repo_url: https://github.com/ankan97dutta/spyglass
+site_name: Profilis
+repo_url: https://github.com/ankan97dutta/profilis
 theme:
   name: material
   features:

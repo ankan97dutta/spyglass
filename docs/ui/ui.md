@@ -1,22 +1,22 @@
 # Built-in UI Dashboard
 
-Spyglass includes a real-time dashboard for monitoring application performance, errors, and metrics.
+Profilis includes a real-time dashboard for monitoring application performance, errors, and metrics.
 
 ## Quick Start
 
 ```python
 from flask import Flask
-from spyglass.flask.ui import make_ui_blueprint
-from spyglass.core.stats import StatsStore
+from profilis.flask.ui import make_ui_blueprint
+from profilis.core.stats import StatsStore
 
 app = Flask(__name__)
 stats = StatsStore()  # 15-minute rolling window
 
-# Mount the dashboard at /_spyglass
-ui_bp = make_ui_blueprint(stats, ui_prefix="/_spyglass")
+# Mount the dashboard at /_profilis
+ui_bp = make_ui_blueprint(stats, ui_prefix="/_profilis")
 app.register_blueprint(ui_bp)
 
-# Visit http://localhost:5000/_spyglass for the dashboard
+# Visit http://localhost:5000/_profilis for the dashboard
 ```
 
 ## Features
@@ -46,7 +46,7 @@ The primary dashboard provides an overview of application health:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Spyglass Dashboard                      │
+│                    Profilis Dashboard                      │
 ├─────────────────────────────────────────────────────────────┤
 │  Requests/sec: 1,234  │  Avg Latency: 45ms  │  Errors: 2% │
 ├─────────────────────────────────────────────────────────────┤
@@ -64,7 +64,7 @@ Programmatic access to dashboard data:
 
 ```python
 # Get metrics as JSON
-GET /_spyglass/metrics.json
+GET /_profilis/metrics.json
 
 # Response format
 {
@@ -102,8 +102,8 @@ GET /_spyglass/metrics.json
 ### Basic Setup
 
 ```python
-from spyglass.flask.ui import make_ui_blueprint
-from spyglass.core.stats import StatsStore
+from profilis.flask.ui import make_ui_blueprint
+from profilis.core.stats import StatsStore
 
 # Create stats store
 stats = StatsStore(
@@ -114,7 +114,7 @@ stats = StatsStore(
 # Create UI blueprint
 ui_bp = make_ui_blueprint(
     stats,
-    ui_prefix="/_spyglass"  # URL prefix
+    ui_prefix="/_profilis"  # URL prefix
 )
 ```
 
@@ -124,7 +124,7 @@ ui_bp = make_ui_blueprint(
 # Production configuration with authentication
 ui_bp = make_ui_blueprint(
     stats,
-    ui_prefix="/_spyglass",
+    ui_prefix="/_profilis",
     ui_auth_token="secret123",  # Bearer token authentication
     ui_title="Production Dashboard",
     ui_theme="dark"             # Dark theme
@@ -159,20 +159,20 @@ stats = StatsStore(
 
 ```python
 from flask import Flask
-from spyglass.flask.adapter import SpyglassFlask
-from spyglass.flask.ui import make_ui_blueprint
-from spyglass.core.stats import StatsStore
+from profilis.flask.adapter import ProfilisFlask
+from profilis.flask.ui import make_ui_blueprint
+from profilis.core.stats import StatsStore
 
 app = Flask(__name__)
 
-# Setup Spyglass profiling
+# Setup Profilis profiling
 exporter = JSONLExporter(dir="./logs")
 collector = AsyncCollector(exporter)
-spyglass = SpyglassFlask(app, collector=collector)
+profilis = ProfilisFlask(app, collector=collector)
 
 # Add dashboard
 stats = StatsStore()
-ui_bp = make_ui_blueprint(stats, ui_prefix="/_spyglass")
+ui_bp = make_ui_blueprint(stats, ui_prefix="/_profilis")
 app.register_blueprint(ui_bp)
 
 # Now both profiling and dashboard are available
@@ -181,8 +181,8 @@ app.register_blueprint(ui_bp)
 ### With Custom Stats
 
 ```python
-from spyglass.core.stats import StatsStore
-from spyglass.core.emitter import Emitter
+from profilis.core.stats import StatsStore
+from profilis.core.emitter import Emitter
 
 # Custom stats collection
 stats = StatsStore()
@@ -241,7 +241,7 @@ Comprehensive error tracking and analysis:
 # Enable bearer token authentication
 ui_bp = make_ui_blueprint(
     stats,
-    ui_prefix="/_spyglass",
+    ui_prefix="/_profilis",
     ui_auth_token="your-secret-token"
 )
 
@@ -266,7 +266,7 @@ def require_auth(f):
     return decorated_function
 
 # Apply to dashboard routes
-@app.route('/_spyglass')
+@app.route('/_profilis')
 @require_auth
 def dashboard():
     return render_template('dashboard.html')
@@ -278,8 +278,8 @@ def dashboard():
 # Production configuration
 ui_bp = make_ui_blueprint(
     stats,
-    ui_prefix="/_spyglass",
-    ui_auth_token=os.environ.get('SPYGLASS_TOKEN'),
+    ui_prefix="/_profilis",
+    ui_auth_token=os.environ.get('PROFILIS_TOKEN'),
     ui_https_only=True,
     ui_cors_origins=['https://yourdomain.com']
 )
@@ -305,7 +305,7 @@ custom_css = """
 
 ui_bp = make_ui_blueprint(
     stats,
-    ui_prefix="/_spyglass",
+    ui_prefix="/_profilis",
     ui_custom_css=custom_css
 )
 ```
@@ -344,7 +344,7 @@ class CustomStatsStore(StatsStore):
 
 # Use custom stats store
 custom_stats = CustomStatsStore()
-ui_bp = make_ui_blueprint(custom_stats, ui_prefix="/_spyglass")
+ui_bp = make_ui_blueprint(custom_stats, ui_prefix="/_profilis")
 ```
 
 ## Monitoring and Alerting
@@ -352,7 +352,7 @@ ui_bp = make_ui_blueprint(custom_stats, ui_prefix="/_spyglass")
 ### Health Checks
 
 ```python
-@app.route('/_spyglass/health')
+@app.route('/_profilis/health')
 def dashboard_health():
     """Check dashboard health"""
     return {
@@ -374,15 +374,15 @@ def dashboard_health():
 
 ```python
 # Prometheus metrics endpoint
-@app.route('/_spyglass/metrics')
+@app.route('/_profilis/metrics')
 def prometheus_metrics():
     """Prometheus-formatted metrics"""
     metrics = []
 
     # Request metrics
-    metrics.append(f"spyglass_requests_total {stats.total_requests}")
-    metrics.append(f"spyglass_errors_total {stats.total_errors}")
-    metrics.append(f"spyglass_error_rate {stats.error_rate}")
+    metrics.append(f"profilis_requests_total {stats.total_requests}")
+    metrics.append(f"profilis_errors_total {stats.total_errors}")
+    metrics.append(f"profilis_error_rate {stats.error_rate}")
 
     # Latency metrics
     if stats.latency_percentiles:
@@ -390,9 +390,9 @@ def prometheus_metrics():
         p95 = stats.latency_percentiles.get(95, 0)
         p99 = stats.latency_percentiles.get(99, 0)
 
-        metrics.append(f"spyglass_latency_p50 {p50}")
-        metrics.append(f"spyglass_latency_p95 {p95}")
-        metrics.append(f"spyglass_latency_p99 {p99}")
+        metrics.append(f"profilis_latency_p50 {p50}")
+        metrics.append(f"profilis_latency_p95 {p95}")
+        metrics.append(f"profilis_latency_p99 {p99}")
 
     return '\n'.join(metrics), 200, {'Content-Type': 'text/plain'}
 ```
@@ -410,10 +410,10 @@ def prometheus_metrics():
 
 ```python
 import os
-os.environ['SPYGLASS_DEBUG'] = '1'
+os.environ['PROFILIS_DEBUG'] = '1'
 
 # This will enable debug logging for the dashboard
-ui_bp = make_ui_blueprint(stats, ui_prefix="/_spyglass")
+ui_bp = make_ui_blueprint(stats, ui_prefix="/_profilis")
 ```
 
 ### Performance Optimization
@@ -429,7 +429,7 @@ stats = StatsStore(
 # Reduce refresh frequency
 ui_bp = make_ui_blueprint(
     stats,
-    ui_prefix="/_spyglass",
+    ui_prefix="/_profilis",
     ui_refresh_interval=10000  # 10 second refresh
 )
 ```

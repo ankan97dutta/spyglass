@@ -1,9 +1,9 @@
 """Flask adapter: request hooks, exceptions, sampling, and bytes in/out.
 
 Usage:
-    from spyglass.flask.adapter import SpyglassFlask
+    from profilis.flask.adapter import ProfilisFlask
     app = Flask(__name__)
-    spy = SpyglassFlask(app, collector=my_collector, exclude_routes=["/health", "/metrics"], sample=1.0)
+    ProfilisFlask(app, collector=my_collector, exclude_routes=["/health", "/metrics"], sample=1.0)
 
 Guarantees:
 - One REQ metric per request (success or error) with route template if available
@@ -20,9 +20,9 @@ from dataclasses import dataclass
 
 from flask import Flask, g, request
 
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.core.emitter import Emitter
-from spyglass.runtime import now_ns, span_id, use_span
+from profilis.core.async_collector import AsyncCollector
+from profilis.core.emitter import Emitter
+from profilis.runtime import now_ns, span_id, use_span
 
 # HTTP status code constants
 HTTP_OK = 200
@@ -41,7 +41,7 @@ class _ReqState:
     exception_type: str | None = None
 
 
-class SpyglassFlask:
+class ProfilisFlask:
     def __init__(
         self,
         app: Flask,
@@ -79,13 +79,13 @@ class SpyglassFlask:
         # Exclusions by prefix
         for exc in self.exclude_routes:
             if path.startswith(exc):
-                g._spyglass_state = None
+                g._profilis_state = None
                 return None
 
         # Sampling
         sampled = random.random() < self.sample
         if not sampled:
-            g._spyglass_state = None
+            g._profilis_state = None
             return None
 
         # Route template detection
@@ -97,11 +97,11 @@ class SpyglassFlask:
         # Assign new trace/span and stash timing
         trace = span_id()
         span = span_id()
-        g._spyglass_ctx = use_span(trace_id=trace, span_id=span)
+        g._profilis_ctx = use_span(trace_id=trace, span_id=span)
         # Enter the span context now; __enter__ called explicitly
-        g._spyglass_ctx.__enter__()
+        g._profilis_ctx.__enter__()
 
-        g._spyglass_state = _ReqState(
+        g._profilis_state = _ReqState(
             start_ns=now_ns(),
             bytes_in=bytes_in,
             route=route_tpl,
@@ -133,7 +133,7 @@ class SpyglassFlask:
         return bytes_in
 
     def _handle_after_request(self, response: _t.Any) -> _t.Any:
-        st: _ReqState | None = getattr(g, "_spyglass_state", None)
+        st: _ReqState | None = getattr(g, "_profilis_state", None)
         if st is None:
             return response
 
@@ -182,12 +182,12 @@ class SpyglassFlask:
         return bytes_out
 
     def _handle_teardown_request(self, exc: _t.Any) -> None:
-        st: _ReqState | None = getattr(g, "_spyglass_state", None)
+        st: _ReqState | None = getattr(g, "_profilis_state", None)
         if st is not None and exc is not None:
             # Remember exception type for after_request emission
             st.exception_type = getattr(exc, "__class__", type(exc)).__name__
         # Exit span context if we entered it
-        ctx = getattr(g, "_spyglass_ctx", None)
+        ctx = getattr(g, "_profilis_ctx", None)
         if ctx is not None:
             with contextlib.suppress(Exception):
                 ctx.__exit__(None, None, None)

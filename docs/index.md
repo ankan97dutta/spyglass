@@ -1,4 +1,4 @@
-# Spyglass
+# Profilis
 
 A high‑performance, non‑blocking profiler for Python web applications.
 
@@ -13,22 +13,22 @@ A high‑performance, non‑blocking profiler for Python web applications.
 ## Quick start (Flask)
 
 ```bash
-pip install spyglass[flask,sqlalchemy]
+pip install profilis[flask,sqlalchemy]
 ```
 
 ```python
 from flask import Flask
-from spyglass.flask.adapter import SpyglassFlask
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
+from profilis.flask.adapter import ProfilisFlask
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
 
 # Setup exporter and collector
 exporter = JSONLExporter(dir="./logs", rotate_bytes=1024*1024, rotate_secs=3600)
 collector = AsyncCollector(exporter, queue_size=2048, batch_max=128, flush_interval=0.1)
 
-# Create Flask app and integrate Spyglass
+# Create Flask app and integrate Profilis
 app = Flask(__name__)
-spyglass = SpyglassFlask(
+profilis = ProfilisFlask(
     app,
     collector=collector,
     exclude_routes=["/health", "/metrics"],
@@ -39,7 +39,7 @@ spyglass = SpyglassFlask(
 def ok():
     return {'ok': True}
 
-# Visit /_spyglass for the dashboard
+# Visit /_profilis for the dashboard
 ```
 
 ## What's New in v0.1.0

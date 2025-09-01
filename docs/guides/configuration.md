@@ -1,15 +1,15 @@
 # Configuration
 
-Spyglass provides extensive configuration options for tuning performance, controlling data collection, and customizing behavior.
+Profilis provides extensive configuration options for tuning performance, controlling data collection, and customizing behavior.
 
 ## Core Configuration
 
 ### AsyncCollector Settings
 
-The `AsyncCollector` is the heart of Spyglass's non-blocking architecture:
+The `AsyncCollector` is the heart of Profilis's non-blocking architecture:
 
 ```python
-from spyglass.core.async_collector import AsyncCollector
+from profilis.core.async_collector import AsyncCollector
 
 collector = AsyncCollector(
     exporter,
@@ -57,9 +57,9 @@ collector = AsyncCollector(
 ### Flask Adapter
 
 ```python
-from spyglass.flask.adapter import SpyglassFlask
+from profilis.flask.adapter import ProfilisFlask
 
-spyglass = SpyglassFlask(
+profilis = ProfilisFlask(
     app,
     collector=collector,
     exclude_routes=["/health", "/metrics", "/static"],  # Routes to ignore
@@ -79,12 +79,12 @@ spyglass = SpyglassFlask(
 exclude_routes = [
     "/health",
     "/metrics",
-    "/_spyglass",  # Built-in dashboard
+    "/_profilis",  # Built-in dashboard
     "/static",     # Static assets
     "/admin"       # Admin routes
 ]
 
-spyglass = SpyglassFlask(app, collector=collector, exclude_routes=exclude_routes)
+profilis = ProfilisFlask(app, collector=collector, exclude_routes=exclude_routes)
 ```
 
 ## Sampling Configuration
@@ -92,16 +92,16 @@ spyglass = SpyglassFlask(app, collector=collector, exclude_routes=exclude_routes
 ### Random Sampling
 ```python
 # Sample 5% of requests in production
-spyglass = SpyglassFlask(app, collector=collector, sample=0.05)
+profilis = ProfilisFlask(app, collector=collector, sample=0.05)
 
 # Sample 100% in development
-spyglass = SpyglassFlask(app, collector=collector, sample=1.0)
+profilis = ProfilisFlask(app, collector=collector, sample=1.0)
 ```
 
 ### Route-Based Sampling
 ```python
 # Different sampling rates for different route patterns
-spyglass = SpyglassFlask(
+profilis = ProfilisFlask(
     app,
     collector=collector,
     exclude_routes=["/health", "/metrics"],  # Always exclude
@@ -114,13 +114,13 @@ spyglass = SpyglassFlask(
 ### JSONL Exporter
 
 ```python
-from spyglass.exporters.jsonl import JSONLExporter
+from profilis.exporters.jsonl import JSONLExporter
 
 exporter = JSONLExporter(
     dir="./logs",                    # Output directory
     rotate_bytes=1024*1024,         # Rotate at 1MB
     rotate_secs=3600,               # Rotate every hour
-    filename_template="spyglass-{timestamp}.jsonl"
+    filename_template="profilis-{timestamp}.jsonl"
 )
 ```
 
@@ -133,7 +133,7 @@ exporter = JSONLExporter(
 ### Console Exporter
 
 ```python
-from spyglass.exporters.console import ConsoleExporter
+from profilis.exporters.console import ConsoleExporter
 
 # Pretty-printed output for development
 exporter = ConsoleExporter(pretty=True)
@@ -144,26 +144,26 @@ exporter = ConsoleExporter(pretty=False)
 
 ## Environment Variables
 
-Configure Spyglass behavior through environment variables:
+Configure Profilis behavior through environment variables:
 
 ```bash
 # Enable debug mode
-export SPYGLASS_DEBUG=1
+export PROFILIS_DEBUG=1
 
 # Set default log directory
-export SPYGLASS_LOG_DIR=/var/log/spyglass
+export PROFILIS_LOG_DIR=/var/log/profilis
 
 # Configure sampling rate (0.0 to 1.0)
-export SPYGLASS_SAMPLE_RATE=0.1
+export PROFILIS_SAMPLE_RATE=0.1
 
 # Set queue size
-export SPYGLASS_QUEUE_SIZE=4096
+export PROFILIS_QUEUE_SIZE=4096
 
 # Set batch size
-export SPYGLASS_BATCH_MAX=256
+export PROFILIS_BATCH_MAX=256
 
 # Set flush interval
-export SPYGLASS_FLUSH_INTERVAL=0.05
+export PROFILIS_FLUSH_INTERVAL=0.05
 ```
 
 ## Runtime Context Configuration
@@ -171,7 +171,7 @@ export SPYGLASS_FLUSH_INTERVAL=0.05
 ### Trace and Span Management
 
 ```python
-from spyglass.runtime import use_span, span_id, get_trace_id, get_span_id
+from profilis.runtime import use_span, span_id, get_trace_id, get_span_id
 
 # Create distributed trace context
 with use_span(trace_id="trace-123", span_id="span-456"):
@@ -189,8 +189,8 @@ with use_span(trace_id="trace-123", span_id="span-456"):
 ### UI Blueprint Settings
 
 ```python
-from spyglass.flask.ui import make_ui_blueprint
-from spyglass.core.stats import StatsStore
+from profilis.flask.ui import make_ui_blueprint
+from profilis.core.stats import StatsStore
 
 # Configure stats store
 stats = StatsStore(
@@ -201,7 +201,7 @@ stats = StatsStore(
 # Mount dashboard with custom settings
 ui_bp = make_ui_blueprint(
     stats,
-    ui_prefix="/_spyglass",     # URL prefix
+    ui_prefix="/_profilis",     # URL prefix
     ui_auth_token="secret123"   # Optional authentication
 )
 app.register_blueprint(ui_bp)
@@ -214,7 +214,7 @@ app.register_blueprint(ui_bp)
 ```python
 # Production-ready configuration
 exporter = JSONLExporter(
-    dir="/var/log/spyglass",
+    dir="/var/log/profilis",
     rotate_bytes=100*1024*1024,  # 100MB files
     rotate_secs=86400            # Daily rotation
 )
@@ -227,10 +227,10 @@ collector = AsyncCollector(
     drop_oldest=True        # Drop under pressure
 )
 
-spyglass = SpyglassFlask(
+profilis = ProfilisFlask(
     app,
     collector=collector,
-    exclude_routes=["/health", "/metrics", "/_spyglass"],
+    exclude_routes=["/health", "/metrics", "/_profilis"],
     sample=0.1              # 10% sampling in production
 )
 ```
@@ -254,12 +254,12 @@ def monitor_collector(collector):
 
 ## Configuration Validation
 
-Spyglass validates configuration at runtime:
+Profilis validates configuration at runtime:
 
 ```python
 # Invalid sampling rate will raise ValueError
 try:
-    spyglass = SpyglassFlask(app, collector=collector, sample=1.5)
+    profilis = ProfilisFlask(app, collector=collector, sample=1.5)
 except ValueError as e:
     print(f"Invalid configuration: {e}")
 

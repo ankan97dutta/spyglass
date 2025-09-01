@@ -1,16 +1,16 @@
 # SQLAlchemy Instrumentation
 
-Spyglass provides automatic SQLAlchemy query profiling with minimal configuration.
+Profilis provides automatic SQLAlchemy query profiling with minimal configuration.
 
 ## Quick Start
 
 ```python
 from sqlalchemy import create_engine
-from spyglass.sqlalchemy.instrumentation import instrument_sqlalchemy
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
+from profilis.sqlalchemy.instrumentation import instrument_sqlalchemy
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
 
-# Setup Spyglass
+# Setup Profilis
 exporter = JSONLExporter(dir="./logs")
 collector = AsyncCollector(exporter)
 
@@ -43,7 +43,7 @@ instrument_sqlalchemy(engine, collector)
 ### Basic Instrumentation
 
 ```python
-from spyglass.sqlalchemy.instrumentation import instrument_sqlalchemy
+from profilis.sqlalchemy.instrumentation import instrument_sqlalchemy
 
 # Simple instrumentation
 instrument_sqlalchemy(engine, collector)
@@ -120,12 +120,12 @@ Additional query information is recorded:
 
 ```python
 from flask import Flask
-from spyglass.flask.adapter import SpyglassFlask
-from spyglass.sqlalchemy.instrumentation import instrument_sqlalchemy
+from profilis.flask.adapter import ProfilisFlask
+from profilis.sqlalchemy.instrumentation import instrument_sqlalchemy
 
-# Setup Flask with Spyglass
+# Setup Flask with Profilis
 app = Flask(__name__)
-spyglass = SpyglassFlask(app, collector=collector)
+profilis = ProfilisFlask(app, collector=collector)
 
 # Instrument SQLAlchemy
 engine = create_engine("sqlite:///app.db")
@@ -142,7 +142,7 @@ def get_user(user_id):
 ### With Function Profiling
 
 ```python
-from spyglass.decorators.profile import profile_function
+from profilis.decorators.profile import profile_function
 
 @profile_function(emitter)
 def get_user_data(user_id: int):
@@ -156,7 +156,7 @@ def get_user_data(user_id: int):
 ### With Runtime Context
 
 ```python
-from spyglass.runtime import use_span, span_id
+from profilis.runtime import use_span, span_id
 
 def process_user_batch(user_ids: list[int]):
     """Process multiple users with distributed tracing"""
@@ -189,7 +189,7 @@ instrument_sqlalchemy(
 
 ```python
 import re
-from spyglass.sqlalchemy.instrumentation import instrument_sqlalchemy
+from profilis.sqlalchemy.instrumentation import instrument_sqlalchemy
 
 def custom_redactor(query: str) -> str:
     """Custom query redaction logic"""
@@ -293,7 +293,7 @@ class QueryAnalyzer:
 
 ```python
 import pytest
-from spyglass.exporters.console import ConsoleExporter
+from profilis.exporters.console import ConsoleExporter
 
 @pytest.fixture
 def test_collector():
@@ -303,7 +303,7 @@ def test_collector():
 
 @pytest.fixture
 def test_engine(test_collector):
-    """Test engine with Spyglass instrumentation"""
+    """Test engine with Profilis instrumentation"""
     engine = create_engine("sqlite:///:memory:")
     instrument_sqlalchemy(engine, test_collector)
     return engine
@@ -322,7 +322,7 @@ def test_query_profiling(test_engine, test_collector):
 
 ```python
 def test_sqlalchemy_integration(test_engine, test_collector):
-    """Test SQLAlchemy integration with Spyglass"""
+    """Test SQLAlchemy integration with Profilis"""
     # Create test data
     test_engine.execute("CREATE TABLE test (id INTEGER, name TEXT)")
     test_engine.execute("INSERT INTO test VALUES (1, 'test')")
@@ -348,7 +348,7 @@ def test_sqlalchemy_integration(test_engine, test_collector):
 
 ```python
 import os
-os.environ['SPYGLASS_DEBUG'] = '1'
+os.environ['PROFILIS_DEBUG'] = '1'
 
 # This will enable debug logging for SQLAlchemy instrumentation
 instrument_sqlalchemy(engine, collector)

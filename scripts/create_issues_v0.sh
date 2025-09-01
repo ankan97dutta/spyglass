@@ -15,7 +15,7 @@ issue "Scaffold repo & toolchain" \
 "**Goal**: Project skeleton with strict quality gates.
 
 ### Subtasks
-- Create \`src/spyglass\`, \`tests\`, \`examples\`, \`pyproject.toml\` (extras: flask, fastapi, sanic, sqlalchemy, pyodbc, mongo, neo4j, perf, all)
+- Create \`src/profilis\`, \`tests\`, \`examples\`, \`pyproject.toml\` (extras: flask, fastapi, sanic, sqlalchemy, pyodbc, mongo, neo4j, perf, all)
 - Add \`README.md\`, \`LICENSE\`, \`CONTRIBUTING.md\`, \`py.typed\`
 - Configure ruff/black, mypy (strict), pre-commit
 - CI: lint/type/tests on 3.9–3.12; wheel build
@@ -71,7 +71,7 @@ issue "Exporters: JSONL (rotating) + Console (+orjson optional)" \
 - Console exporter; \`[perf]\` extra uses \`orjson\`
 
 ### Acceptance
-- Rotation creates \`spyglass-YYYYmmdd-HHMMSS.jsonl\`
+- Rotation creates \`profilis-YYYYmmdd-HHMMSS.jsonl\`
 
 ### Tests
 - Rotation by size/time; unicode-safe writes

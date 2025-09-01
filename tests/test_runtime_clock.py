@@ -1,4 +1,4 @@
-from spyglass.runtime.clock import now_ns
+from profilis.runtime.clock import now_ns
 
 
 def test_now_ns_monotonic_non_decreasing() -> None:

@@ -23,7 +23,7 @@ EOF
 
 # ========== docs/index.md ==========
 cat > docs/index.md <<'EOF'
-# Spyglass
+# Profilis
 
 A high‑performance, non‑blocking profiler for Python web apps.
 
@@ -34,16 +34,16 @@ A high‑performance, non‑blocking profiler for Python web apps.
 
 ## Quick start (Flask)
 ```bash
-pip install spyglass[flask,sqlalchemy]
+pip install profilis[flask,sqlalchemy]
 ```
 ```python
 from flask import Flask
-from spyglass.integrations.flask_ext import SpyglassFlask
+from profilis.integrations.flask_ext import ProfilisFlask
 app = Flask(__name__)
-sg = SpyglassFlask(app, ui_enabled=True, ui_prefix="/_spyglass")
+sg = ProfilisFlask(app, ui_enabled=True, ui_prefix="/_profilis")
 @app.get('/health')
 def ok(): return {'ok': True}
-# Visit /_spyglass for the dashboard
+# Visit /_profilis for the dashboard
 ```
 EOF
 
@@ -52,14 +52,14 @@ cat > docs/overview/problem-statement.md <<'EOF'
 # Problem statement
 
 APIs in modern (GenAI) stacks get slow without clear visibility. Tooling is fragmented or heavy.
-Spyglass provides a **drop‑in, production‑safe** profiler with **microsecond‑level overhead**.
+Profilis provides a **drop‑in, production‑safe** profiler with **microsecond‑level overhead**.
 EOF
 
 # ========== overview/roadmap.md ==========
 cat > docs/overview/roadmap.md <<'EOF'
 # Roadmap
 
-See GitHub Project: *Spyglass – v0 Roadmap*.
+See GitHub Project: *Profilis – v0 Roadmap*.
 
 - v0.1.0 — Core + Flask + SQLAlchemy + UI
 - v0.2.0 — pyodbc + Mongo + Neo4j
@@ -136,7 +136,7 @@ cat > docs/guides/getting-started.md <<'EOF'
 # Getting started
 
 ```bash
-pip install spyglass[flask,sqlalchemy]
+pip install profilis[flask,sqlalchemy]
 ```
 
 See also: adapters/ and databases/ guides for framework/DB specifics.
@@ -201,8 +201,8 @@ cat > docs/adapters/flask.md <<'EOF'
 # Flask
 
 ```python
-from spyglass.integrations.flask_ext import SpyglassFlask
-sg = SpyglassFlask(app, ui_enabled=True, ui_prefix="/_spyglass")
+from profilis.integrations.flask_ext import ProfilisFlask
+sg = ProfilisFlask(app, ui_enabled=True, ui_prefix="/_profilis")
 ```
 EOF
 
@@ -211,8 +211,8 @@ cat > docs/adapters/fastapi.md <<'EOF'
 # FastAPI
 
 ```python
-from spyglass.integrations.asgi_middleware import SpyglassASGIMiddleware
-app.add_middleware(SpyglassASGIMiddleware, cfg=cfg)
+from profilis.integrations.asgi_middleware import ProfilisASGIMiddleware
+app.add_middleware(ProfilisASGIMiddleware, cfg=cfg)
 ```
 EOF
 
@@ -228,7 +228,7 @@ cat > docs/adapters/functions.md <<'EOF'
 # @profile_function
 
 ```python
-from spyglass.core.decorators import profile_function
+from profilis.core.decorators import profile_function
 
 @profile_function()
 def work(): ...
@@ -270,7 +270,7 @@ cat > docs/exporters/jsonl.md <<'EOF'
 
 - Rotation by size/time
 - Atomic rename
-- Example path: `logs/spyglass.jsonl`
+- Example path: `logs/profilis.jsonl`
 EOF
 
 # ========== exporters/prometheus.md ==========
@@ -278,12 +278,12 @@ cat > docs/exporters/prometheus.md <<'EOF'
 # Prometheus exporter
 
 Metrics:
-- `spyglass_http_requests_total`
-- `spyglass_http_request_duration_seconds` (histogram)
-- `spyglass_db_queries_total`
-- `spyglass_db_query_duration_seconds` (histogram)
-- `spyglass_function_calls_total`
-- `spyglass_function_duration_seconds`
+- `profilis_http_requests_total`
+- `profilis_http_request_duration_seconds` (histogram)
+- `profilis_db_queries_total`
+- `profilis_db_query_duration_seconds` (histogram)
+- `profilis_function_calls_total`
+- `profilis_function_duration_seconds`
 
 Label plan: service, instance, worker, route/status, function, db_vendor.
 EOF

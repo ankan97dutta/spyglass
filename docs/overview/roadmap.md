@@ -1,6 +1,6 @@
 # Roadmap
 
-See GitHub Project: *Spyglass – v0 Roadmap*.
+See GitHub Project: *Profilis – v0 Roadmap*.
 
 ## Version Status
 

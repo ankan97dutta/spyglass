@@ -2,5 +2,5 @@ import importlib
 
 
 def test_import() -> None:
-    spyglass = importlib.import_module("spyglass")
-    assert hasattr(spyglass, "__version__")
+    profilis = importlib.import_module("profilis")
+    assert hasattr(profilis, "__version__")

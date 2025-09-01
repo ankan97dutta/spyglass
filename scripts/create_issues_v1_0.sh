@@ -31,7 +31,7 @@ issue "Benchmarks: Flask/FastAPI/Sanic load profiles" \
 "### Subtasks
 - Demo apps for each framework; Make targets
 - Load tests with hey/wrk; Locust soak (30–60 min)
-- Record p50/p95 deltas with/without spyglass; events/min; CPU%
+- Record p50/p95 deltas with/without profilis; events/min; CPU%
 - Tuning guide: queue size, flush interval, sampling
 
 ### Acceptance
@@ -63,7 +63,7 @@ issue "Release engineering: TestPyPI → PyPI + changelog" \
 - GitHub Release with notes; (optional) signing/provenance
 
 ### Acceptance
-- \`pip install spyglass[flask,sqlalchemy]\` quickstart works on clean envs
+- \`pip install profilis[flask,sqlalchemy]\` quickstart works on clean envs
 
 ### Tests
 - CI builds wheels on Linux/macOS/Windows; smoke install 3.9–3.12

@@ -1,6 +1,6 @@
 # Architecture
 
-Spyglass is built with a modular, non-blocking architecture designed for high performance and minimal overhead.
+Profilis is built with a modular, non-blocking architecture designed for high performance and minimal overhead.
 
 ## System Overview
 
@@ -40,7 +40,7 @@ flowchart LR
 ## Core Components
 
 ### AsyncCollector
-The heart of Spyglass's non-blocking architecture.
+The heart of Profilis's non-blocking architecture.
 
 **Responsibilities:**
 - Asynchronous event collection and batching
@@ -103,7 +103,7 @@ Distributed tracing and context management.
 
 **Usage:**
 ```python
-from spyglass.runtime import use_span, span_id, get_trace_id, get_span_id
+from profilis.runtime import use_span, span_id, get_trace_id, get_span_id
 
 # Create distributed trace context
 with use_span(trace_id=span_id()):
@@ -134,7 +134,7 @@ Automatic request/response profiling with hooks.
 
 **Configuration:**
 ```python
-spyglass = SpyglassFlask(
+profilis = ProfilisFlask(
     app,
     collector=collector,
     exclude_routes=["/health", "/metrics"],
@@ -210,7 +210,7 @@ exporter = JSONLExporter(
     dir="./logs",
     rotate_bytes=1024*1024,  # 1MB per file
     rotate_secs=3600,        # Hourly rotation
-    filename_template="spyglass-{timestamp}.jsonl"
+    filename_template="profilis-{timestamp}.jsonl"
 )
 ```
 

@@ -1,5 +1,5 @@
 [project]
-name = "spyglass"
+name = "profilis"
 version = "0.1.0"
 description = "High performance, non blocking profiler for Python web apps."
 readme = "README.md"
