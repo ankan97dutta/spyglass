@@ -5,7 +5,7 @@ See GitHub Project: *Profilis – v0 Roadmap*.
 ## Version Status
 
 ### ✅ v0.1.0 — Core + Flask + SQLAlchemy + UI (COMPLETED)
-**Released**: December 2024
+**Released**: September 2025
 
 **Delivered Features:**
 - **Core Profiling Engine**
@@ -49,7 +49,7 @@ See GitHub Project: *Profilis – v0 Roadmap*.
 - Latency: Sub-millisecond collection overhead
 
 ### 🔄 v0.2.0 — Additional Database Support (IN PROGRESS)
-**Target**: Q1 2025
+**Target**: Q4 2025
 
 **Planned Features:**
 - **pyodbc Integration**
@@ -73,7 +73,7 @@ See GitHub Project: *Profilis – v0 Roadmap*.
 - Performance regression detection
 
 ### 🔄 v0.3.0 — ASGI Framework Support (PLANNED)
-**Target**: Q2 2025
+**Target**: Q4 2025
 
 **Planned Features:**
 - **FastAPI Integration**
@@ -97,7 +97,7 @@ See GitHub Project: *Profilis – v0 Roadmap*.
 - WebSocket profiling
 
 ### 🔄 v0.4.0 — Advanced Features & Resilience (PLANNED)
-**Target**: Q3 2025
+**Target**: Q4 2025
 
 **Planned Features:**
 - **Advanced Sampling**

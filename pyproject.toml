@@ -9,6 +9,21 @@ authors = [{ name = "Ankan Dutta" }]
 dependencies = [
     "typing_extensions>=4.0",  # Required for ParamSpec in profile decorator
 ]
+keywords = ["profiler", "python", "flask", "fastapi", "sanic", "sql", "sqlalchemy", "pyodbc", "mongo", "neo4j", "asyncio", "monitoring", "performance"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Software Development :: Testing",
+  "Topic :: System :: Monitoring",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Operating System :: OS Independent",
+]
 
 # Optional extras; keep runtime deps light in core
 [project.optional-dependencies]
@@ -71,3 +86,8 @@ plugins = []
 mypy_path = "src"
 ignore_missing_imports = true
 disable_error_code = ["misc", "no-any-return"]
+
+[project.urls]
+"Homepage" = "https://github.com/ankan97dutta/profilis"
+"Documentation" = "https://ankan97dutta.github.io/profilis/"
+"Bug Tracker" = "https://github.com/ankan97dutta/profilis/issues"
