@@ -2,7 +2,7 @@ name: docs
 
 on:
   push:
-    branches: [ main, chore/rename-to-profilis ]
+    branches: [ main ]
     paths:
       - 'docs/**'
       - 'mkdocs.yml'
@@ -26,5 +26,7 @@ jobs:
           pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin
       - name: Build site
         run: mkdocs build --strict
+      - name: Add .nojekyll
+        run: touch site/.nojekyll
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force
