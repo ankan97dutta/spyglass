@@ -57,8 +57,8 @@ def ok():
 - [Installation](guides/installation.md) - Complete installation guide and options
 - [Getting Started](guides/getting-started.md) - Quick setup and basic usage
 - [Configuration](guides/configuration.md) - Tuning and customization
-- [Framework Adapters](adapters/) - Flask integration, FastAPI (planned)
-- [Database Support](databases/) - SQLAlchemy integration
-- [Exporters](exporters/) - JSONL and Console exporters
-- [Architecture](architecture/) - System design and components
-- [UI Dashboard](ui/) - Built-in monitoring interface
+- [Framework Adapters](adapters/flask.md) - Flask integration, FastAPI (planned)
+- [Database Support](databases/sqlalchemy.md) - SQLAlchemy integration
+- [Exporters](exporters/jsonl.md) - JSONL and Console exporters
+- [Architecture](architecture/architecture.md) - System design and components
+- [UI Dashboard](ui/ui.md) - Built-in monitoring interface

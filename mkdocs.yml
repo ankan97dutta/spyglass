@@ -2,18 +2,42 @@ site_name: Profilis
 repo_url: https://github.com/ankan97dutta/profilis
 theme:
   name: material
+  logo: assets/logo.svg      # your custom SVG
+  favicon: assets/favicon.svg  # optional
+  palette:
+    - scheme: default
+      primary: custom
+      accent: custom
   features:
-    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - navigation.instant
+    - search.suggest
     - content.code.copy
+extra_css:
+  - stylesheets/extra.css
 markdown_extensions:
-  - admonition
   - toc:
       permalink: true
-  - pymdownx.superfences
-  - pymdownx.highlight
-  - pymdownx.tabbed
-  - attr_list
   - md_in_html
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - pymdownx.details
+  - pymdownx.emoji
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.keys
+  - pymdownx.tasklist
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 plugins:
   - search
   - mermaid2
