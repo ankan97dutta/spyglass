@@ -14,15 +14,15 @@ FastAPI integration is not yet available in v0.1.0. The roadmap includes:
 
 ## What's Available Now
 
-While waiting for FastAPI support, you can use Spyglass's core profiling capabilities:
+While waiting for FastAPI support, you can use Profilis's core profiling capabilities with manual instrumentation:
 
 ### Function Profiling
 
 ```python
-from spyglass.decorators.profile import profile_function
-from spyglass.core.emitter import Emitter
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
+from profilis.decorators.profile import profile_function
+from profilis.core.emitter import Emitter
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
 
 # Setup profiling
 exporter = JSONLExporter(dir="./logs")
@@ -40,21 +40,21 @@ async def fastapi_handler():
 
 ```python
 from fastapi import FastAPI, Request
-from spyglass.core.emitter import Emitter
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.runtime import use_span, span_id
+from profilis.core.emitter import Emitter
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
+from profilis.runtime import use_span, span_id
 import time
 
 app = FastAPI()
 
-# Setup Spyglass
+# Setup Profilis
 exporter = JSONLExporter(dir="./logs")
 collector = AsyncCollector(exporter)
 emitter = Emitter(collector)
 
 @app.middleware("http")
-async def spyglass_middleware(request: Request, call_next):
+async def profilis_middleware(request: Request, call_next):
     start_time = time.time_ns()
 
     # Create trace context
@@ -83,6 +83,8 @@ async def spyglass_middleware(request: Request, call_next):
             raise
 ```
 
+**Note**: This manual approach works but doesn't provide the same level of integration as the planned FastAPI adapter, which will include automatic route detection, better exception handling, and performance optimizations.
+
 ## Planned Features for v0.3.0
 
 The FastAPI adapter will include:
@@ -101,15 +103,15 @@ If you need immediate profiling, consider using Flask for the profiling layer:
 
 ```python
 from flask import Flask
-from spyglass.flask.adapter import SpyglassFlask
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
+from profilis.flask.adapter import ProfilisFlask
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
 
-# Setup Spyglass with Flask
+# Setup Profilis with Flask
 flask_app = Flask(__name__)
 exporter = JSONLExporter(dir="./logs")
 collector = AsyncCollector(exporter)
-spyglass = SpyglassFlask(flask_app, collector=collector)
+profilis = ProfilisFlask(flask_app, collector=collector)
 
 # Use the same collector for FastAPI manual profiling
 # (when FastAPI support is available)
@@ -120,8 +122,8 @@ spyglass = SpyglassFlask(flask_app, collector=collector)
 For critical paths, use manual instrumentation:
 
 ```python
-from spyglass.core.emitter import Emitter
-from spyglass.runtime import use_span, span_id
+from profilis.core.emitter import Emitter
+from profilis.runtime import use_span, span_id
 
 @app.get("/api/critical")
 async def critical_endpoint():
@@ -137,13 +139,13 @@ async def critical_endpoint():
 
 ## Stay Updated
 
-- **GitHub Issues**: Track progress on [FastAPI integration](https://github.com/ankan97dutta/spyglass/issues)
+- **GitHub Issues**: Track progress on [FastAPI integration](https://github.com/ankan97dutta/profilis/issues)
 - **Roadmap**: See [docs/overview/roadmap.md](../overview/roadmap.md) for detailed planning
-- **Discussions**: Join the conversation in [GitHub Discussions](https://github.com/ankan97dutta/spyglass/discussions)
+- **Discussions**: Join the conversation in [GitHub Discussions](https://github.com/ankan97dutta/profilis/discussions)
 
 ## Related Documentation
 
-- [Getting Started](../guides/getting-started.md) - Core Spyglass usage
+- [Getting Started](../guides/getting-started.md) - Core Profilis usage
 - [Configuration](../guides/configuration.md) - Tuning and customization
 - [Architecture](../architecture/) - System design and components
 - [Exporters](../exporters/) - Available output formats

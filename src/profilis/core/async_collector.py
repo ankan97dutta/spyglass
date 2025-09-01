@@ -32,7 +32,7 @@ class AsyncCollector(Generic[T]):
         queue_size: int = 2048,
         flush_interval: float = 0.5,
         batch_max: int = 256,
-        name: str = "spyglass-collector",
+        name: str = "profilis-collector",
     ) -> None:
         if queue_size <= 0:
             raise ValueError("queue_size must be > 0")

@@ -5,8 +5,8 @@ The JSONL (JSON Lines) exporter writes profiling events to rotating log files in
 ## Quick Start
 
 ```python
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
 
 # Basic setup
 exporter = JSONLExporter(dir="./logs")
@@ -39,13 +39,13 @@ exporter = JSONLExporter(
 ### Basic Configuration
 
 ```python
-from spyglass.exporters.jsonl import JSONLExporter
+from profilis.exporters.jsonl import JSONLExporter
 
 # Simple setup
 exporter = JSONLExporter(dir="./logs")
 
 # With custom directory
-exporter = JSONLExporter(dir="/var/log/spyglass")
+exporter = JSONLExporter(dir="/var/log/profilis")
 ```
 
 ### Rotation Configuration
@@ -76,10 +76,10 @@ exporter = JSONLExporter(
 ```python
 # Production configuration
 exporter = JSONLExporter(
-    dir="/var/log/spyglass",
+    dir="/var/log/profilis",
     rotate_bytes=100*1024*1024,  # 100MB files
     rotate_secs=86400,            # Daily rotation
-    filename_template="spyglass-{timestamp}.jsonl",
+    filename_template="profilis-{timestamp}.jsonl",
     compress_old_files=True,      # Compress rotated files
     max_files=30                  # Keep last 30 files
 )
@@ -92,10 +92,10 @@ By default, files are named with timestamps:
 
 ```
 logs/
-├── spyglass-20241227-120000.jsonl    # 12:00 rotation
-├── spyglass-20241227-130000.jsonl    # 13:00 rotation
-├── spyglass-20241227-140000.jsonl    # 14:00 rotation
-└── spyglass-20241227-150000.jsonl    # Current file
+├── profilis-20241227-120000.jsonl    # 12:00 rotation
+├── profilis-20241227-130000.jsonl    # 13:00 rotation
+├── profilis-20241227-140000.jsonl    # 14:00 rotation
+└── profilis-20241227-150000.jsonl    # Current file
 ```
 
 ### Custom Naming
@@ -144,9 +144,9 @@ exporter = JSONLExporter(
 
 ```python
 from flask import Flask
-from spyglass.flask.adapter import SpyglassFlask
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
+from profilis.flask.adapter import ProfilisFlask
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
 
 # Setup JSONL exporter
 exporter = JSONLExporter(
@@ -159,15 +159,15 @@ collector = AsyncCollector(exporter)
 
 # Integrate with Flask
 app = Flask(__name__)
-spyglass = SpyglassFlask(app, collector=collector)
+profilis = ProfilisFlask(app, collector=collector)
 ```
 
 ### With Multiple Exporters
 
 ```python
-from spyglass.exporters.console import ConsoleExporter
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
+from profilis.exporters.console import ConsoleExporter
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
 
 # Development: Console + JSONL
 if app.debug:
@@ -179,7 +179,7 @@ if app.debug:
 else:
     # Production: JSONL only
     jsonl_exporter = JSONLExporter(
-        dir="/var/log/spyglass",
+        dir="/var/log/profilis",
         rotate_bytes=100*1024*1024,
         rotate_secs=86400
     )
@@ -189,8 +189,8 @@ else:
 ### With Custom Event Processing
 
 ```python
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
 import json
 
 class CustomJSONLExporter(JSONLExporter):
@@ -350,7 +350,7 @@ class CompressedJSONLExporter(JSONLExporter):
 # Use compressed exporter
 exporter = CompressedJSONLExporter(
     dir="./logs",
-    filename_template="spyglass-{timestamp}.jsonl.gz"
+    filename_template="profilis-{timestamp}.jsonl.gz"
 )
 ```
 
@@ -367,7 +367,7 @@ exporter = CompressedJSONLExporter(
 
 ```python
 import os
-os.environ['SPYGLASS_DEBUG'] = '1'
+os.environ['PROFILIS_DEBUG'] = '1'
 
 # This will enable debug logging for the JSONL exporter
 exporter = JSONLExporter(dir="./logs")

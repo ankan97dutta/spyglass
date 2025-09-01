@@ -6,9 +6,9 @@ The Flask adapter provides automatic request/response profiling with minimal cod
 
 ```python
 from flask import Flask
-from spyglass.flask.adapter import SpyglassFlask
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
+from profilis.flask.adapter import ProfilisFlask
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
 
 # Setup exporter and collector
 exporter = JSONLExporter(dir="./logs", rotate_bytes=1024*1024, rotate_secs=3600)
@@ -17,12 +17,12 @@ collector = AsyncCollector(exporter, queue_size=2048, batch_max=128, flush_inter
 # Create Flask app
 app = Flask(__name__)
 
-# Integrate Spyglass
-spyglass = SpyglassFlask(
+# Integrate Profilis
+profilis = ProfilisFlask(
     app,
     collector=collector,
     exclude_routes=["/health", "/metrics"],
-    sample=1.0
+    sample=1.0  # 100% sampling
 )
 
 @app.route('/api/users')
@@ -53,7 +53,7 @@ if __name__ == "__main__":
 ### Basic Configuration
 
 ```python
-spyglass = SpyglassFlask(
+profilis = ProfilisFlask(
     app,
     collector=collector,           # Required: AsyncCollector instance
     exclude_routes=None,           # Optional: Routes to exclude
@@ -65,13 +65,13 @@ spyglass = SpyglassFlask(
 
 ```python
 # Production configuration with sampling
-spyglass = SpyglassFlask(
+profilis = ProfilisFlask(
     app,
     collector=collector,
     exclude_routes=[
         "/health",
         "/metrics",
-        "/_spyglass",  # Built-in dashboard
+        "/_profilis",  # Built-in dashboard
         "/static",     # Static assets
         "/admin"       # Admin routes
     ],
@@ -129,27 +129,27 @@ When exceptions occur, additional metadata is recorded:
 ### With Built-in Dashboard
 
 ```python
-from spyglass.flask.ui import make_ui_blueprint
-from spyglass.core.stats import StatsStore
+from profilis.flask.ui import make_ui_blueprint
+from profilis.core.stats import StatsStore
 
 app = Flask(__name__)
 stats = StatsStore()
 
-# Setup Spyglass profiling
-spyglass = SpyglassFlask(app, collector=collector)
+# Setup Profilis profiling
+profilis = ProfilisFlask(app, collector=collector)
 
 # Add dashboard
-ui_bp = make_ui_blueprint(stats, ui_prefix="/_spyglass")
+ui_bp = make_ui_blueprint(stats, ui_prefix="/_profilis")
 app.register_blueprint(ui_bp)
 
-# Visit /_spyglass for real-time metrics
+# Visit /_profilis for real-time metrics
 ```
 
 ### With Custom Exporters
 
 ```python
-from spyglass.exporters.console import ConsoleExporter
-from spyglass.exporters.jsonl import JSONLExporter
+from profilis.exporters.console import ConsoleExporter
+from profilis.exporters.jsonl import JSONLExporter
 
 # Multiple exporters
 console_exporter = ConsoleExporter(pretty=True)
@@ -161,19 +161,19 @@ if app.debug:
 else:
     collector = AsyncCollector(jsonl_exporter)
 
-spyglass = SpyglassFlask(app, collector=collector)
+profilis = ProfilisFlask(app, collector=collector)
 ```
 
 ### With Database Instrumentation
 
 ```python
-from spyglass.sqlalchemy.instrumentation import instrument_sqlalchemy
+from profilis.sqlalchemy.instrumentation import instrument_sqlalchemy
 
 # Instrument SQLAlchemy
 instrument_sqlalchemy(engine, collector)
 
 # Flask adapter will automatically correlate request and database events
-spyglass = SpyglassFlask(app, collector=collector)
+profilis = ProfilisFlask(app, collector=collector)
 ```
 
 ## Performance Considerations
@@ -182,16 +182,16 @@ spyglass = SpyglassFlask(app, collector=collector)
 
 ```python
 # Development: 100% sampling
-spyglass = SpyglassFlask(app, collector=collector, sample=1.0)
+profilis = ProfilisFlask(app, collector=collector, sample=1.0)
 
 # Staging: 50% sampling
-spyglass = SpyglassFlask(app, collector=collector, sample=0.5)
+profilis = ProfilisFlask(app, collector=collector, sample=0.5)
 
 # Production: 10% sampling
-spyglass = SpyglassFlask(app, collector=collector, sample=0.1)
+profilis = ProfilisFlask(app, collector=collector, sample=0.1)
 
 # Critical endpoints: Always profile
-spyglass = SpyglassFlask(
+profilis = ProfilisFlask(
     app,
     collector=collector,
     exclude_routes=["/health", "/metrics"],
@@ -206,13 +206,13 @@ spyglass = SpyglassFlask(
 exclude_routes = [
     "/health",           # Health checks
     "/metrics",          # Metrics endpoints
-    "/_spyglass",        # Built-in dashboard
+    "/_profilis",        # Built-in dashboard
     "/static",           # Static assets
     "/admin",            # Admin interface
     "/favicon.ico"       # Browser requests
 ]
 
-spyglass = SpyglassFlask(
+profilis = ProfilisFlask(
     app,
     collector=collector,
     exclude_routes=exclude_routes
@@ -245,7 +245,7 @@ def get_user(user_id):
 ### Custom Error Handling
 
 ```python
-from spyglass.core.emitter import Emitter
+from profilis.core.emitter import Emitter
 
 @app.errorhandler(404)
 def not_found(error):
@@ -262,8 +262,8 @@ def not_found(error):
 ```python
 import pytest
 from flask import Flask
-from spyglass.flask.adapter import SpyglassFlask
-from spyglass.exporters.console import ConsoleExporter
+from profilis.flask.adapter import ProfilisFlask
+from profilis.exporters.console import ConsoleExporter
 
 @pytest.fixture
 def app():
@@ -273,7 +273,7 @@ def app():
     exporter = ConsoleExporter(pretty=False)
     collector = AsyncCollector(exporter, queue_size=128, flush_interval=0.01)
 
-    spyglass = SpyglassFlask(app, collector=collector)
+    profilis = ProfilisFlask(app, collector=collector)
     return app
 
 def test_user_endpoint(app, client):
@@ -297,7 +297,7 @@ def test_profiling_integration(app, client):
 
 ### Common Issues
 
-1. **Import Errors**: Ensure you're using `spyglass.flask.adapter.SpyglassFlask`
+1. **Import Errors**: Ensure you're using `profilis.flask.adapter.ProfilisFlask`
 2. **Missing Collector**: Always provide an AsyncCollector instance
 3. **Route Conflicts**: Check for conflicts with built-in dashboard routes
 4. **Performance Impact**: Use sampling in production to reduce overhead
@@ -306,18 +306,18 @@ def test_profiling_integration(app, client):
 
 ```python
 import os
-os.environ['SPYGLASS_DEBUG'] = '1'
+os.environ['PROFILIS_DEBUG'] = '1'
 
 # This will enable debug logging
-spyglass = SpyglassFlask(app, collector=collector)
+profilis = ProfilisFlask(app, collector=collector)
 ```
 
 ### Health Checks
 
 ```python
-@app.route('/_spyglass/health')
-def spyglass_health():
-    """Check Spyglass collector health"""
+@app.route('/_profilis/health')
+def profilis_health():
+    """Check Profilis collector health"""
     return {
         "collector": {
             "queue_size": collector.queue.qsize(),
@@ -333,20 +333,20 @@ If you're upgrading from an earlier version:
 
 ```python
 # Old import (v0.0.x)
-# from spyglass.integrations.flask_ext import SpyglassFlask
+# from profilis.integrations.flask_ext import ProfilisFlask
 
 # New import (v0.1.0)
-from spyglass.flask.adapter import SpyglassFlask
+from profilis.flask.adapter import ProfilisFlask
 
 # Old configuration
-# sg = SpyglassFlask(app, ui_enabled=True, ui_prefix="/_spyglass")
+# sg = ProfilisFlask(app, ui_enabled=True, ui_prefix="/_profilis")
 
 # New configuration
 exporter = JSONLExporter(dir="./logs")
 collector = AsyncCollector(exporter)
-spyglass = SpyglassFlask(app, collector=collector)
+profilis = ProfilisFlask(app, collector=collector)
 
 # Add UI separately if needed
-ui_bp = make_ui_blueprint(stats, ui_prefix="/_spyglass")
+ui_bp = make_ui_blueprint(stats, ui_prefix="/_profilis")
 app.register_blueprint(ui_bp)
 ```

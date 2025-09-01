@@ -1,5 +1,5 @@
-site_name: Spyglass
-repo_url: https://github.com/ankan97dutta/spyglass
+site_name: Profilis
+repo_url: https://github.com/ankan97dutta/profilis
 theme:
   name: material
   features:
@@ -24,35 +24,19 @@ nav:
       - Roadmap: overview/roadmap.md
   - Architecture:
       - Architecture: architecture/architecture.md
-      - Deployment: architecture/deployment.md
-      - Data model: architecture/data-model.md
   - Guides:
       - Getting started: guides/getting-started.md
       - Configuration: guides/configuration.md
-      - Sampling: guides/sampling.md
-      - Reliability: guides/reliability.md
-      - Performance: guides/performance.md
-      - Troubleshooting: guides/troubleshooting.md
+      - Installation: guides/installation.md
   - Adapters:
       - Flask: adapters/flask.md
       - FastAPI: adapters/fastapi.md
-      - Sanic: adapters/sanic.md
-      - Functions: adapters/functions.md
   - Databases:
       - SQLAlchemy: databases/sqlalchemy.md
-      - pyodbc: databases/pyodbc.md
-      - MongoDB: databases/mongodb.md
-      - Neo4j: databases/neo4j.md
   - Exporters:
       - JSONL: exporters/jsonl.md
-      - Prometheus: exporters/prometheus.md
-      - OTLP: exporters/otlp.md
   - UI:
       - UI: ui/ui.md
-  - Ops:
-      - Benchmarks: ops/benchmarks.md
-      - Release: ops/release.md
-      - Security & privacy: ops/security-privacy.md
   - Meta:
       - Contributing: meta/contributing.md
       - Dev guidelines: meta/development-guidelines.md

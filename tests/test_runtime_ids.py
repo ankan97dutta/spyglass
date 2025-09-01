@@ -1,6 +1,6 @@
 import re
 
-from spyglass.runtime.ids import span_id
+from profilis.runtime.ids import span_id
 
 HEX16 = re.compile(r"^[0-9a-f]{16}$")
 TEST_ITERATIONS = 10_000

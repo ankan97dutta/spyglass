@@ -2,22 +2,22 @@
 
 ## Installation
 
-Install Spyglass with the dependencies you need:
+Install Profilis with the dependencies you need:
 
 ### Option 1: Using pip with extras (Recommended)
 
 ```bash
 # Core package only
-pip install spyglass
+pip install profilis
 
 # With Flask support
-pip install spyglass[flask]
+pip install profilis[flask]
 
 # With database support
-pip install spyglass[flask,sqlalchemy]
+pip install profilis[flask,sqlalchemy]
 
 # With all integrations
-pip install spyglass[all]
+pip install profilis[all]
 ```
 
 ### Option 2: Using requirements files
@@ -54,21 +54,21 @@ pip install orjson>=3.8
 
 ### What Each Option Provides
 
-- **`spyglass` (core)**: Basic profiling with Emitter and AsyncCollector
-- **`spyglass[flask]`**: Core + Flask request/response profiling
-- **`spyglass[sqlalchemy]`**: Core + SQLAlchemy query profiling
-- **`spyglass[perf]`**: Core + orjson for faster JSON serialization
-- **`spyglass[all]`**: Everything including all frameworks and databases
+- **`profilis` (core)**: Basic profiling with Emitter and AsyncCollector
+- **`profilis[flask]`**: Core + Flask request/response profiling
+- **`profilis[sqlalchemy]`**: Core + SQLAlchemy query profiling
+- **`profilis[perf]`**: Core + orjson for faster JSON serialization
+- **`profilis[all]`**: Everything including all frameworks and databases
 
 ## Quick Start with Flask
 
-Here's a minimal Flask application with Spyglass integration:
+Here's a minimal Flask application with Profilis integration:
 
 ```python
 from flask import Flask
-from spyglass.flask.adapter import SpyglassFlask
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
+from profilis.flask.adapter import ProfilisFlask
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
 
 # Setup exporter and collector
 exporter = JSONLExporter(dir="./logs", rotate_bytes=1024*1024, rotate_secs=3600)
@@ -77,8 +77,8 @@ collector = AsyncCollector(exporter, queue_size=2048, batch_max=128, flush_inter
 # Create Flask app
 app = Flask(__name__)
 
-# Integrate Spyglass
-spyglass = SpyglassFlask(
+# Integrate Profilis
+profilis = ProfilisFlask(
     app,
     collector=collector,
     exclude_routes=["/health", "/metrics"],
@@ -102,10 +102,10 @@ if __name__ == "__main__":
 Use the `@profile_function` decorator to profile specific functions:
 
 ```python
-from spyglass.decorators.profile import profile_function
-from spyglass.core.emitter import Emitter
-from spyglass.exporters.console import ConsoleExporter
-from spyglass.core.async_collector import AsyncCollector
+from profilis.decorators.profile import profile_function
+from profilis.core.emitter import Emitter
+from profilis.exporters.console import ConsoleExporter
+from profilis.core.async_collector import AsyncCollector
 
 # Setup profiling
 exporter = ConsoleExporter(pretty=True)
@@ -134,17 +134,17 @@ Enable the built-in dashboard for real-time monitoring:
 
 ```python
 from flask import Flask
-from spyglass.flask.ui import make_ui_blueprint
-from spyglass.core.stats import StatsStore
+from profilis.flask.ui import make_ui_blueprint
+from profilis.core.stats import StatsStore
 
 app = Flask(__name__)
 stats = StatsStore()  # 15-minute rolling window
 
-# Mount the dashboard at /_spyglass
-ui_bp = make_ui_blueprint(stats, ui_prefix="/_spyglass")
+# Mount the dashboard at /_profilis
+ui_bp = make_ui_blueprint(stats, ui_prefix="/_profilis")
 app.register_blueprint(ui_bp)
 
-# Visit http://localhost:5000/_spyglass to see the dashboard
+# Visit http://localhost:5000/_profilis to see the dashboard
 ```
 
 ## Manual Event Emission
@@ -152,10 +152,10 @@ app.register_blueprint(ui_bp)
 For custom instrumentation, use the Emitter directly:
 
 ```python
-from spyglass.core.emitter import Emitter
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.runtime import use_span, span_id
+from profilis.core.emitter import Emitter
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
+from profilis.runtime import use_span, span_id
 
 # Setup
 exporter = JSONLExporter(dir="./logs")

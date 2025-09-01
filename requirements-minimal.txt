@@ -1,4 +1,4 @@
-# Spyglass Minimal Dependencies
+# Profilis Minimal Dependencies
 # Install with: pip install -r requirements-minimal.txt
 # This includes only the core dependencies needed for basic profiling
 

@@ -1,4 +1,4 @@
-# Spyglass Core Dependencies
+# Profilis Core Dependencies
 # Install with: pip install -r requirements.txt
 
 # Core dependencies (always required)

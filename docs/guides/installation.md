@@ -1,6 +1,6 @@
 # Installation Guide
 
-This guide covers all the different ways to install Spyglass and what each installation option provides.
+This guide covers all the different ways to install Profilis and what each installation option provides.
 
 ## Prerequisites
 
@@ -16,16 +16,16 @@ This is the most flexible and recommended approach:
 
 ```bash
 # Core package only
-pip install spyglass
+pip install profilis
 
 # With Flask support
-pip install spyglass[flask]
+pip install profilis[flask]
 
 # With database support
-pip install spyglass[flask,sqlalchemy]
+pip install profilis[flask,sqlalchemy]
 
 # With all integrations
-pip install spyglass[all]
+pip install profilis[all]
 ```
 
 **Available Extras:**
@@ -78,7 +78,7 @@ pip install orjson>=3.8
 
 ## What Each Installation Provides
 
-### Core Package (`pip install spyglass`)
+### Core Package (`pip install profilis`)
 
 **Dependencies:**
 - `typing_extensions>=4.0`
@@ -92,7 +92,7 @@ pip install orjson>=3.8
 
 **Use Case:** Basic profiling without framework integration
 
-### Flask Integration (`pip install spyglass[flask]`)
+### Flask Integration (`pip install profilis[flask]`)
 
 **Dependencies:**
 - Core dependencies
@@ -106,7 +106,7 @@ pip install orjson>=3.8
 
 **Use Case:** Flask web applications
 
-### SQLAlchemy Integration (`pip install spyglass[sqlalchemy]`)
+### SQLAlchemy Integration (`pip install profilis[sqlalchemy]`)
 
 **Dependencies:**
 - Core dependencies
@@ -122,7 +122,7 @@ pip install orjson>=3.8
 
 **Use Case:** Applications using SQLAlchemy
 
-### Performance Optimization (`pip install spyglass[perf]`)
+### Performance Optimization (`pip install profilis[perf]`)
 
 **Dependencies:**
 - Core dependencies
@@ -136,7 +136,7 @@ pip install orjson>=3.8
 
 **Use Case:** Production applications with high event volumes
 
-### All Integrations (`pip install spyglass[all]`)
+### All Integrations (`pip install profilis[all]`)
 
 **Dependencies:**
 - All framework integrations
@@ -156,8 +156,8 @@ For contributors and developers:
 
 ```bash
 # Clone the repository
-git clone https://github.com/ankan97dutta/spyglass.git
-cd spyglass
+git clone https://github.com/ankan97dutta/profilis.git
+cd profilis
 
 # Install in editable mode with development dependencies
 pip install -e ".[dev]"
@@ -172,16 +172,16 @@ pip install -r requirements-dev.txt
 
 ```bash
 # Create virtual environment
-python -m venv spyglass-env
+python -m venv profilis-env
 
 # Activate virtual environment
 # On Windows:
-spyglass-env\Scripts\activate
+profilis-env\Scripts\activate
 # On macOS/Linux:
-source spyglass-env/bin/activate
+source profilis-env/bin/activate
 
-# Install Spyglass
-pip install spyglass[flask,sqlalchemy]
+# Install Profilis
+pip install profilis[flask,sqlalchemy]
 ```
 
 ## Production Installation
@@ -190,7 +190,7 @@ For production deployments:
 
 ```bash
 # Install with specific versions for stability
-pip install spyglass[flask,sqlalchemy]==0.1.0
+pip install profilis[flask,sqlalchemy]==0.1.0
 
 # Or use requirements file with pinned versions
 pip install -r requirements-production.txt
@@ -216,15 +216,15 @@ pip install -r requirements-production.txt
 3. **Performance Issues**
    ```bash
    # Install performance optimizations
-   pip install spyglass[perf]
+   pip install profilis[perf]
    ```
 
 4. **Version Conflicts**
    ```bash
    # Use virtual environment
-   python -m venv spyglass-env
-   source spyglass-env/bin/activate
-   pip install spyglass[flask,sqlalchemy]
+   python -m venv profilis-env
+   source profilis-env/bin/activate
+   pip install profilis[flask,sqlalchemy]
    ```
 
 ### Dependency Resolution
@@ -236,7 +236,7 @@ If you encounter dependency conflicts:
 pip list
 
 # Install with --force-reinstall if needed
-pip install --force-reinstall spyglass[flask]
+pip install --force-reinstall profilis[flask]
 
 # Or use pip-tools for dependency resolution
 pip install pip-tools

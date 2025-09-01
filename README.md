@@ -1,20 +1,20 @@
 <img width="64" height="64" alt="image" src="https://github.com/user-attachments/assets/663b4497-d023-49a6-9ce9-60c50c86df02" />
 
-# Spyglass
+# Profilis
 
 > A high performance, non-blocking profiler for Python web applications.
 
-[![Docs](https://github.com/ankan97dutta/spyglass/actions/workflows/docs.yml/badge.svg)](https://ankan97dutta.github.io/spyglass/)
-[![CI](https://github.com/ankan97dutta/spyglass/actions/workflows/ci.yml/badge.svg)](https://github.com/ankan97dutta/spyglass/actions/workflows/ci.yml)
+[![Docs](https://github.com/ankan97dutta/profilis/actions/workflows/docs.yml/badge.svg)](https://ankan97dutta.github.io/profilis/)
+[![CI](https://github.com/ankan97dutta/profilis/actions/workflows/ci.yml/badge.svg)](https://github.com/ankan97dutta/profilis/actions/workflows/ci.yml)
 ---
 
 ## Overview
 
-Spyglass provides drop-in observability across APIs, functions, and database queries with minimal performance impact. It's designed to be:
+Profilis provides drop-in observability across APIs, functions, and database queries with minimal performance impact. It's designed to be:
 
 - **Non blocking**: Async collection with configurable batching and backpressure handling
-- **Framework agnostic**: Works with Flask, FastAPI, Sanic, and custom applications
-- **Database aware**: Built-in support for SQLAlchemy, pyodbc, MongoDB, and Neo4j
+- **Framework agnostic**: Works with Flask and custom applications (FastAPI/Sanic planned)
+- **Database aware**: Built-in support for SQLAlchemy (pyodbc/MongoDB/Neo4j planned)
 - **Production ready**: Configurable sampling, error tracking, and multiple export formats
 
 <img width="1138" height="627" alt="Screenshot 2025-08-30 at 1 33 08 PM" src="https://github.com/user-attachments/assets/41e3e9fa-7756-462d-a67b-cc988605c5dd" />
@@ -24,9 +24,9 @@ Spyglass provides drop-in observability across APIs, functions, and database que
 
 - **Request Profiling**: Automatic HTTP request/response timing and status tracking
 - **Function Profiling**: Decorator-based function timing with exception tracking
-- **Database Instrumentation**: Query performance monitoring with row counts
+- **Database Instrumentation**: SQLAlchemy query performance monitoring with row counts
 - **Built-in UI**: Real-time dashboard for monitoring and debugging
-- **Multiple Exporters**: JSONL (with rotation), Console, Prometheus, OTLP
+- **Multiple Exporters**: JSONL (with rotation), Console
 - **Runtime Context**: Distributed tracing with trace/span ID management
 - **Configurable Sampling**: Control data collection volume in production
 
@@ -39,16 +39,16 @@ Install the core package with optional dependencies for your specific needs:
 
 ```bash
 # Core package only
-pip install spyglass
+pip install profilis
 
 # With Flask support
-pip install spyglass[flask]
+pip install profilis[flask]
 
 # With database support
-pip install spyglass[flask,sqlalchemy]
+pip install profilis[flask,sqlalchemy]
 
 # With all integrations
-pip install spyglass[all]
+pip install profilis[all]
 ```
 
 ### Option 2: Using requirements files
@@ -89,17 +89,17 @@ pip install orjson>=3.8
 
 ```python
 from flask import Flask
-from spyglass.flask.adapter import SpyglassFlask
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
+from profilis.flask.adapter import ProfilisFlask
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
 
 # Setup exporter and collector
 exporter = JSONLExporter(dir="./logs", rotate_bytes=1024*1024, rotate_secs=3600)
 collector = AsyncCollector(exporter, queue_size=2048, batch_max=128, flush_interval=0.1)
 
-# Create Flask app and integrate Spyglass
+# Create Flask app and integrate Profilis
 app = Flask(__name__)
-spyglass = SpyglassFlask(
+profilis = ProfilisFlask(
     app,
     collector=collector,
     exclude_routes=["/health", "/metrics"],
@@ -118,10 +118,10 @@ if __name__ == "__main__":
 ### Function Profiling
 
 ```python
-from spyglass.decorators.profile import profile_function
-from spyglass.core.emitter import Emitter
-from spyglass.exporters.console import ConsoleExporter
-from spyglass.core.async_collector import AsyncCollector
+from profilis.decorators.profile import profile_function
+from profilis.core.emitter import Emitter
+from profilis.exporters.console import ConsoleExporter
+from profilis.core.async_collector import AsyncCollector
 
 # Setup profiling
 exporter = ConsoleExporter(pretty=True)
@@ -147,10 +147,10 @@ result = expensive_calculation(1000)
 ### Manual Event Emission
 
 ```python
-from spyglass.core.emitter import Emitter
-from spyglass.exporters.jsonl import JSONLExporter
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.runtime import use_span, span_id
+from profilis.core.emitter import Emitter
+from profilis.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
+from profilis.runtime import use_span, span_id
 
 # Setup
 exporter = JSONLExporter(dir="./logs")
@@ -172,17 +172,17 @@ collector.close()
 
 ```python
 from flask import Flask
-from spyglass.flask.ui import make_ui_blueprint
-from spyglass.core.stats import StatsStore
+from profilis.flask.ui import make_ui_blueprint
+from profilis.core.stats import StatsStore
 
 app = Flask(__name__)
 stats = StatsStore()  # 15-minute rolling window
 
-# Mount the dashboard at /_spyglass
-ui_bp = make_ui_blueprint(stats, ui_prefix="/_spyglass")
+# Mount the dashboard at /_profilis
+ui_bp = make_ui_blueprint(stats, ui_prefix="/_profilis")
 app.register_blueprint(ui_bp)
 
-# Visit http://localhost:5000/_spyglass to see the dashboard
+# Visit http://localhost:5000/_profilis to see the dashboard
 ```
 
 ## Advanced Usage
@@ -190,8 +190,8 @@ app.register_blueprint(ui_bp)
 ### Custom Exporters
 
 ```python
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.exporters.base import BaseExporter
+from profilis.core.async_collector import AsyncCollector
+from profilis.exporters.base import BaseExporter
 
 class CustomExporter(BaseExporter):
     def export(self, events: list[dict]) -> None:
@@ -207,7 +207,7 @@ collector = AsyncCollector(exporter)
 ### Runtime Context Management
 
 ```python
-from spyglass.runtime import use_span, span_id, get_trace_id, get_span_id
+from profilis.runtime import use_span, span_id, get_trace_id, get_span_id
 
 # Create distributed trace context
 with use_span(trace_id="trace-123", span_id="span-456"):
@@ -223,7 +223,7 @@ with use_span(trace_id="trace-123", span_id="span-456"):
 ### Performance Tuning
 
 ```python
-from spyglass.core.async_collector import AsyncCollector
+from profilis.core.async_collector import AsyncCollector
 
 # High-throughput configuration
 collector = AsyncCollector(
@@ -249,24 +249,18 @@ collector = AsyncCollector(
 ### Environment Variables
 
 ```bash
-# Enable debug mode
-export SPYGLASS_DEBUG=1
-
-# Set default log directory
-export SPYGLASS_LOG_DIR=/var/log/spyglass
-
-# Configure sampling rate (0.0 to 1.0)
-export SPYGLASS_SAMPLE_RATE=0.1
+# Note: Environment variable support is planned for future releases
+# Currently, all configuration is done programmatically
 ```
 
 ### Sampling Strategies
 
 ```python
 # Random sampling
-spyglass = SpyglassFlask(app, collector=collector, sample=0.1)  # 10% of requests
+profilis = ProfilisFlask(app, collector=collector, sample=0.1)  # 10% of requests
 
 # Route-based sampling
-spyglass = SpyglassFlask(
+profilis = ProfilisFlask(
     app,
     collector=collector,
     exclude_routes=["/health", "/metrics", "/static"],
@@ -278,7 +272,7 @@ spyglass = SpyglassFlask(
 
 ### JSONL Exporter
 ```python
-from spyglass.exporters.jsonl import JSONLExporter
+from profilis.exporters.jsonl import JSONLExporter
 
 # With rotation
 exporter = JSONLExporter(
@@ -290,23 +284,13 @@ exporter = JSONLExporter(
 
 ### Console Exporter
 ```python
-from spyglass.exporters.console import ConsoleExporter
+from profilis.exporters.console import ConsoleExporter
 
-# Pretty-printed output
+# Pretty-printed output for development
 exporter = ConsoleExporter(pretty=True)
 
-# Compact output
+# Compact output for production
 exporter = ConsoleExporter(pretty=False)
-```
-
-### Prometheus Exporter
-```python
-from spyglass.exporters.prometheus import PrometheusExporter
-
-exporter = PrometheusExporter(
-    port=9090,
-    addr="0.0.0.0"
-)
 ```
 
 ## Performance Characteristics
@@ -318,9 +302,19 @@ exporter = PrometheusExporter(
 
 ## Documentation
 
-Full documentation is available at: [Spyglass Docs](https://ankan97dutta.github.io/spyglass/)
+Full documentation is available at: [Profilis Docs](https://ankan97dutta.github.io/profilis/)
 
 Docs are written in Markdown under [`docs/`](./docs) and built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/).
+
+### Available Documentation
+
+- **[Getting Started](https://ankan97dutta.github.io/profilis/guides/getting-started/)** - Quick setup and basic usage
+- **[Configuration](https://ankan97dutta.github.io/profilis/guides/configuration/)** - Tuning and customization
+- **[Flask Integration](https://ankan97dutta.github.io/profilis/adapters/flask/)** - Flask adapter documentation
+- **[SQLAlchemy Support](https://ankan97dutta.github.io/profilis/databases/sqlalchemy/)** - Database instrumentation
+- **[JSONL Exporter](https://ankan97dutta.github.io/profilis/exporters/jsonl/)** - Log file output
+- **[Built-in UI](https://ankan97dutta.github.io/profilis/ui/ui/)** - Dashboard documentation
+- **[Architecture](https://ankan97dutta.github.io/profilis/architecture/architecture/)** - System design
 
 To preview locally:
 ```bash
@@ -336,7 +330,7 @@ mkdocs serve
 
 ## Roadmap
 
-See [Spyglass – v0 Roadmap Project](https://github.com/ankan97dutta/spyglass/projects) and [`docs/overview/roadmap.md`](./docs/overview/roadmap.md).
+See [Profilis – v0 Roadmap Project](https://github.com/ankan97dutta/profilis/projects) and [`docs/overview/roadmap.md`](./docs/overview/roadmap.md).
 
 ## License
 

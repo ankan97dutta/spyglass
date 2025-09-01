@@ -44,9 +44,9 @@ issue "Sampling policies: global rate, per-route overrides, always-on errors" \
 
 issue "Prometheus exporter: counters & histograms + label plan" \
 "### Subtasks
-- HTTP: \`spyglass_http_requests_total\`, \`spyglass_http_request_duration_seconds\` (histogram)
-- Functions: \`spyglass_function_calls_total\`, \`spyglass_function_duration_seconds\` (histogram)
-- DB: \`spyglass_db_queries_total\`, \`spyglass_db_query_duration_seconds\` (histogram)
+- HTTP: \`profilis_http_requests_total\`, \`profilis_http_request_duration_seconds\` (histogram)
+- Functions: \`profilis_function_calls_total\`, \`profilis_function_duration_seconds\` (histogram)
+- DB: \`profilis_db_queries_total\`, \`profilis_db_query_duration_seconds\` (histogram)
 - Labels: service, instance, worker, route/status, function, db_vendor
 - Buckets: [0.005,0.01,0.025,0.05,0.1,0.25,0.5,1,2,5,10]
 - Expose /metrics (Flask+ASGI)
@@ -63,7 +63,7 @@ issue "Reliability: exporter/collector failure modes + graceful shutdown" \
 - Disk-full fallback (noop writer + warn once)
 - Collector crash handling (disable or respawn safely)
 - Graceful shutdown: best-effort flush with timeout; never block exit
-- Health metrics: \`spyglass_events_dropped_total\`, \`spyglass_queue_depth\`
+- Health metrics: \`profilis_events_dropped_total\`, \`profilis_queue_depth\`
 
 ### Acceptance
 - Requests unaffected by failures; shutdown within timeout

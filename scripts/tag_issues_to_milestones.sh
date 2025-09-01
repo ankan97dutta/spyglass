@@ -17,7 +17,7 @@ if [[ -z "${GH_OWNER}" || -z "${GH_REPO}" ]]; then
 fi
 
 if [[ -z "${GH_OWNER}" || -z "${GH_REPO}" ]]; then
-  echo "Set GH_OWNER and GH_REPO (e.g., export GH_OWNER=you GH_REPO=spyglass), or run inside a cloned repo."
+  echo "Set GH_OWNER and GH_REPO (e.g., export GH_OWNER=you GH_REPO=profilis), or run inside a cloned repo."
   exit 2
 fi
 

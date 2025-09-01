@@ -1,7 +1,7 @@
 import threading
 import time
 
-from spyglass.core.async_collector import AsyncCollector
+from profilis.core.async_collector import AsyncCollector
 
 
 def test_non_blocking_and_drop_oldest_under_burst() -> None:

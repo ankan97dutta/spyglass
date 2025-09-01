@@ -3,8 +3,8 @@
 import time
 from typing import Any
 
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.core.emitter import Emitter
+from profilis.core.async_collector import AsyncCollector
+from profilis.core.emitter import Emitter
 
 received: list[Any] = []
 col = AsyncCollector[dict[str, Any]](

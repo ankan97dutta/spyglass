@@ -3,7 +3,7 @@ from typing import Optional
 
 import pytest
 
-from spyglass.runtime.context import (
+from profilis.runtime.context import (
     get_span_id,
     get_trace_id,
     use_span,

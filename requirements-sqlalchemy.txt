@@ -1,4 +1,4 @@
-# Spyglass SQLAlchemy Dependencies
+# Profilis SQLAlchemy Dependencies
 # Install with: pip install -r requirements-sqlalchemy.txt
 # This includes core + SQLAlchemy integration
 

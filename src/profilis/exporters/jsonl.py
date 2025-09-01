@@ -1,8 +1,8 @@
 """JSONL exporter with size/time-based rotation.
 
 Design:
-- Append to an *active* temp file: spyglass-active.jsonl.tmp
-- On rotation, atomically rename temp -> spyglass-YYYYmmdd-HHMMSS.jsonl
+- Append to an *active* temp file: profilis-active.jsonl.tmp
+- On rotation, atomically rename temp -> profilis-YYYYmmdd-HHMMSS.jsonl
 - Thread-safe via an internal lock; safe as an AsyncCollector sink by exposing __call__(batch).
 - Uses orjson if available; falls back to stdlib json with ensure_ascii=False for unicode safety.
 """
@@ -33,8 +33,8 @@ class JSONLExporter:
         *,
         rotate_bytes: int = 10_000_000,  # 10 MB
         rotate_secs: float = 300.0,  # 5 minutes
-        prefix: str = "spyglass",
-        active_name: str = "spyglass-active.jsonl.tmp",
+        prefix: str = "profilis",
+        active_name: str = "profilis-active.jsonl.tmp",
     ) -> None:
         self.dir = os.path.abspath(dir)
         self.rotate_bytes = int(rotate_bytes)

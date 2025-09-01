@@ -2,7 +2,7 @@
 set -euo pipefail
 : "${GH_OWNER:?}"; : "${GH_REPO:?}"
 
-PROJECT_TITLE="${PROJECT_TITLE:-Spyglass – v0 Roadmap}"
+PROJECT_TITLE="${PROJECT_TITLE:-Profilis – v0 Roadmap}"
 PROJECT_DESC="${PROJECT_DESC:-High-performance, framework-agnostic profiler with UI and DB adapters.}"
 
 # ---- Parse args: --milestone "..." OR --label "..." ----

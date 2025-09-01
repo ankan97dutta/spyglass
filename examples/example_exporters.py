@@ -8,10 +8,10 @@ Run:
 
 import time
 
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.core.emitter import Emitter
-from spyglass.exporters.console import ConsoleExporter
-from spyglass.exporters.jsonl import JSONLExporter
+from profilis.core.async_collector import AsyncCollector
+from profilis.core.emitter import Emitter
+from profilis.exporters.console import ConsoleExporter
+from profilis.exporters.jsonl import JSONLExporter
 
 # Setup exporters
 jsonl = JSONLExporter(dir="./logs", rotate_bytes=1024, rotate_secs=5)

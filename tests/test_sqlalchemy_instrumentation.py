@@ -5,9 +5,9 @@ from typing import Any
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from spyglass.core.async_collector import AsyncCollector
-from spyglass.core.emitter import Emitter
-from spyglass.sqlalchemy.instrumentation import (
+from profilis.core.async_collector import AsyncCollector
+from profilis.core.emitter import Emitter
+from profilis.sqlalchemy.instrumentation import (
     instrument_async_engine,
     instrument_engine,
     redact_statement,

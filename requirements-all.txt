@@ -1,4 +1,4 @@
-# Spyglass All Dependencies
+# Profilis All Dependencies
 # Install with: pip install -r requirements-all.txt
 # This includes all framework and database integrations
 
