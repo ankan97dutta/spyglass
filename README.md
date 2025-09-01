@@ -17,7 +17,7 @@ Profilis provides drop-in observability across APIs, functions, and database que
 - **Database aware**: Built-in support for SQLAlchemy (pyodbc/MongoDB/Neo4j planned)
 - **Production ready**: Configurable sampling, error tracking, and multiple export formats
 
-<img width="1138" height="627" alt="Screenshot 2025-08-30 at 1 33 08 PM" src="https://github.com/user-attachments/assets/41e3e9fa-7756-462d-a67b-cc988605c5dd" />
+<img width="1126" height="642" alt="Screenshot 2025-09-01 at 12 38 50 PM" src="https://github.com/user-attachments/assets/7c9d541b-4984-4575-92fb-8c0ec48dff55" />
 
 
 ## Features
