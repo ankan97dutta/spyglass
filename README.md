@@ -13,8 +13,8 @@
 Profilis provides drop-in observability across APIs, functions, and database queries with minimal performance impact. It's designed to be:
 
 - **Non blocking**: Async collection with configurable batching and backpressure handling
-- **Framework agnostic**: Works with Flask, FastAPI, Sanic, and custom applications
-- **Database aware**: Built-in support for SQLAlchemy, pyodbc, MongoDB, and Neo4j
+- **Framework agnostic**: Works with Flask and custom applications (FastAPI/Sanic planned)
+- **Database aware**: Built-in support for SQLAlchemy (pyodbc/MongoDB/Neo4j planned)
 - **Production ready**: Configurable sampling, error tracking, and multiple export formats
 
 <img width="1138" height="627" alt="Screenshot 2025-08-30 at 1 33 08 PM" src="https://github.com/user-attachments/assets/41e3e9fa-7756-462d-a67b-cc988605c5dd" />
@@ -24,9 +24,9 @@ Profilis provides drop-in observability across APIs, functions, and database que
 
 - **Request Profiling**: Automatic HTTP request/response timing and status tracking
 - **Function Profiling**: Decorator-based function timing with exception tracking
-- **Database Instrumentation**: Query performance monitoring with row counts
+- **Database Instrumentation**: SQLAlchemy query performance monitoring with row counts
 - **Built-in UI**: Real-time dashboard for monitoring and debugging
-- **Multiple Exporters**: JSONL (with rotation), Console, Prometheus, OTLP
+- **Multiple Exporters**: JSONL (with rotation), Console
 - **Runtime Context**: Distributed tracing with trace/span ID management
 - **Configurable Sampling**: Control data collection volume in production
 
@@ -249,14 +249,8 @@ collector = AsyncCollector(
 ### Environment Variables
 
 ```bash
-# Enable debug mode
-export PROFILIS_DEBUG=1
-
-# Set default log directory
-export PROFILIS_LOG_DIR=/var/log/profilis
-
-# Configure sampling rate (0.0 to 1.0)
-export PROFILIS_SAMPLE_RATE=0.1
+# Note: Environment variable support is planned for future releases
+# Currently, all configuration is done programmatically
 ```
 
 ### Sampling Strategies
@@ -292,21 +286,11 @@ exporter = JSONLExporter(
 ```python
 from profilis.exporters.console import ConsoleExporter
 
-# Pretty-printed output
+# Pretty-printed output for development
 exporter = ConsoleExporter(pretty=True)
 
-# Compact output
+# Compact output for production
 exporter = ConsoleExporter(pretty=False)
-```
-
-### Prometheus Exporter
-```python
-from profilis.exporters.prometheus import PrometheusExporter
-
-exporter = PrometheusExporter(
-    port=9090,
-    addr="0.0.0.0"
-)
 ```
 
 ## Performance Characteristics
@@ -321,6 +305,16 @@ exporter = PrometheusExporter(
 Full documentation is available at: [Profilis Docs](https://ankan97dutta.github.io/profilis/)
 
 Docs are written in Markdown under [`docs/`](./docs) and built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/).
+
+### Available Documentation
+
+- **[Getting Started](https://ankan97dutta.github.io/profilis/guides/getting-started/)** - Quick setup and basic usage
+- **[Configuration](https://ankan97dutta.github.io/profilis/guides/configuration/)** - Tuning and customization
+- **[Flask Integration](https://ankan97dutta.github.io/profilis/adapters/flask/)** - Flask adapter documentation
+- **[SQLAlchemy Support](https://ankan97dutta.github.io/profilis/databases/sqlalchemy/)** - Database instrumentation
+- **[JSONL Exporter](https://ankan97dutta.github.io/profilis/exporters/jsonl/)** - Log file output
+- **[Built-in UI](https://ankan97dutta.github.io/profilis/ui/ui/)** - Dashboard documentation
+- **[Architecture](https://ankan97dutta.github.io/profilis/architecture/architecture/)** - System design
 
 To preview locally:
 ```bash

@@ -14,7 +14,7 @@ FastAPI integration is not yet available in v0.1.0. The roadmap includes:
 
 ## What's Available Now
 
-While waiting for FastAPI support, you can use Profilis's core profiling capabilities:
+While waiting for FastAPI support, you can use Profilis's core profiling capabilities with manual instrumentation:
 
 ### Function Profiling
 
@@ -82,6 +82,8 @@ async def profilis_middleware(request: Request, call_next):
             )
             raise
 ```
+
+**Note**: This manual approach works but doesn't provide the same level of integration as the planned FastAPI adapter, which will include automatic route detection, better exception handling, and performance optimizations.
 
 ## Planned Features for v0.3.0
 

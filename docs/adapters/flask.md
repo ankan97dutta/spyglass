@@ -22,7 +22,7 @@ profilis = ProfilisFlask(
     app,
     collector=collector,
     exclude_routes=["/health", "/metrics"],
-    sample=1.0
+    sample=1.0  # 100% sampling
 )
 
 @app.route('/api/users')

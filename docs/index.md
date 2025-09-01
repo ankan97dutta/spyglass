@@ -4,10 +4,10 @@ A high‑performance, non‑blocking profiler for Python web applications.
 
 ## Features
 
-- **Frameworks**: Flask, FastAPI, Sanic
-- **Databases**: SQLAlchemy, pyodbc, MongoDB, Neo4j
-- **UI**: Built‑in, real-time dashboard
-- **Exporters**: JSONL (rotating), Console, Prometheus, OTLP (future)
+- **Frameworks**: Flask ✅, FastAPI (planned v0.3.0), Sanic (planned v0.3.0)
+- **Databases**: SQLAlchemy ✅ (sync & async), pyodbc (planned v0.2.0), MongoDB (planned v0.2.0), Neo4j (planned v0.2.0)
+- **UI**: Built‑in, real-time dashboard ✅
+- **Exporters**: JSONL (rotating) ✅, Console ✅, Prometheus (planned v0.4.0), OTLP (planned v0.4.0)
 - **Performance**: ≤15µs per event, 100K+ events/second
 
 ## Quick start (Flask)
@@ -45,20 +45,20 @@ def ok():
 ## What's New in v0.1.0
 
 - ✅ **Core Profiling Engine**: AsyncCollector, Emitter, and runtime context
-- ✅ **Flask Integration**: Automatic request/response profiling
-- ✅ **SQLAlchemy Instrumentation**: Query performance monitoring
-- ✅ **Built-in Dashboard**: Real-time metrics and error tracking
+- ✅ **Flask Integration**: Automatic request/response profiling with hooks
+- ✅ **SQLAlchemy Instrumentation**: Both sync and async engine support with query redaction
+- ✅ **Built-in Dashboard**: Real-time metrics and error tracking with authentication
 - ✅ **JSONL Exporter**: Rotating log files with configurable retention
-- ✅ **Function Profiling**: Decorator-based timing with exception tracking
-- ✅ **Performance Optimized**: Non-blocking collection with configurable batching
+- ✅ **Function Profiling**: Decorator-based timing for sync/async functions with exception tracking
+- ✅ **Performance Optimized**: Non-blocking collection with configurable batching and drop-oldest policy
 
 ## Documentation
 
 - [Installation](guides/installation.md) - Complete installation guide and options
 - [Getting Started](guides/getting-started.md) - Quick setup and basic usage
 - [Configuration](guides/configuration.md) - Tuning and customization
-- [Framework Adapters](adapters/) - Flask, FastAPI, Sanic integration
-- [Database Support](databases/) - SQLAlchemy, MongoDB, Neo4j
-- [Exporters](exporters/) - JSONL, Console, Prometheus
+- [Framework Adapters](adapters/) - Flask integration, FastAPI (planned)
+- [Database Support](databases/) - SQLAlchemy integration
+- [Exporters](exporters/) - JSONL and Console exporters
 - [Architecture](architecture/) - System design and components
 - [UI Dashboard](ui/) - Built-in monitoring interface

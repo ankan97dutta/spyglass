@@ -6,21 +6,39 @@ Profilis provides automatic SQLAlchemy query profiling with minimal configuratio
 
 ```python
 from sqlalchemy import create_engine
-from profilis.sqlalchemy.instrumentation import instrument_sqlalchemy
+from profilis.sqlalchemy.instrumentation import instrument_engine
+from profilis.core.emitter import Emitter
 from profilis.exporters.jsonl import JSONLExporter
 from profilis.core.async_collector import AsyncCollector
 
 # Setup Profilis
 exporter = JSONLExporter(dir="./logs")
 collector = AsyncCollector(exporter)
+emitter = Emitter(collector)
 
 # Create SQLAlchemy engine
 engine = create_engine("sqlite:///app.db")
 
 # Instrument the engine
-instrument_sqlalchemy(engine, collector)
+instrument_engine(engine, emitter)
 
 # All queries will now be automatically profiled
+```
+
+### Async SQLAlchemy Support
+
+```python
+from sqlalchemy.ext.asyncio import create_async_engine
+from profilis.sqlalchemy.instrumentation import instrument_async_engine
+
+# Create async engine
+async_engine = create_async_engine("sqlite+aiosqlite:///app.db")
+
+# Instrument the async engine
+emitter = Emitter(collector)
+instrument_async_engine(async_engine, emitter)
+
+# All async queries will now be automatically profiled
 ```
 
 ## Features
@@ -43,17 +61,19 @@ instrument_sqlalchemy(engine, collector)
 ### Basic Instrumentation
 
 ```python
-from profilis.sqlalchemy.instrumentation import instrument_sqlalchemy
+from profilis.sqlalchemy.instrumentation import instrument_engine
+from profilis.core.emitter import Emitter
 
 # Simple instrumentation
-instrument_sqlalchemy(engine, collector)
+emitter = Emitter(collector)
+instrument_engine(engine, emitter)
 
 # With custom options
-instrument_sqlalchemy(
+instrument_engine(
     engine,
-    collector,
-    redact_queries=True,      # Hide sensitive data
-    min_duration_ms=10        # Only profile queries > 10ms
+    emitter,
+    redact=True,              # Hide sensitive data (default: True)
+    max_len=200               # Maximum query length (default: 200)
 )
 ```
 
@@ -61,13 +81,11 @@ instrument_sqlalchemy(
 
 ```python
 # Production configuration
-instrument_sqlalchemy(
+instrument_engine(
     engine,
-    collector,
-    redact_queries=True,           # Always redact in production
-    min_duration_ms=50,            # Only profile slow queries
-    include_parameters=False,      # Don't capture query parameters
-    max_query_length=1000          # Truncate very long queries
+    emitter,
+    redact=True,                   # Always redact in production (default)
+    max_len=500                    # Truncate very long queries
 )
 ```
 
@@ -121,7 +139,8 @@ Additional query information is recorded:
 ```python
 from flask import Flask
 from profilis.flask.adapter import ProfilisFlask
-from profilis.sqlalchemy.instrumentation import instrument_sqlalchemy
+from profilis.sqlalchemy.instrumentation import instrument_engine
+from profilis.core.emitter import Emitter
 
 # Setup Flask with Profilis
 app = Flask(__name__)
@@ -129,7 +148,8 @@ profilis = ProfilisFlask(app, collector=collector)
 
 # Instrument SQLAlchemy
 engine = create_engine("sqlite:///app.db")
-instrument_sqlalchemy(engine, collector)
+emitter = Emitter(collector)
+instrument_engine(engine, emitter)
 
 # Now Flask requests and SQL queries are automatically correlated
 @app.route('/api/users/<user_id>')
@@ -209,34 +229,29 @@ instrument_sqlalchemy(
 
 ## Performance Tuning
 
-### Query Filtering
+### Query Length Limiting
 
 ```python
-# Only profile slow queries
-instrument_sqlalchemy(
+# Limit query text length to reduce memory usage
+instrument_engine(
     engine,
-    collector,
-    min_duration_ms=100  # Only profile queries > 100ms
-)
-
-# Only profile specific query types
-instrument_sqlalchemy(
-    engine,
-    collector,
-    query_types=["SELECT", "INSERT", "UPDATE"]  # Skip DELETE queries
+    emitter,
+    max_len=100  # Truncate queries longer than 100 characters
 )
 ```
 
-### Sampling
+### Redaction Control
 
 ```python
-# Profile only 10% of queries
-instrument_sqlalchemy(
+# Disable redaction for debugging (not recommended for production)
+instrument_engine(
     engine,
-    collector,
-    sample_rate=0.1
+    emitter,
+    redact=False  # Show full query text
 )
 ```
+
+**Note**: The current implementation profiles all queries. For high-volume applications, consider implementing sampling at the collector level or using route-based sampling in Flask.
 
 ## Monitoring and Alerting
 
@@ -305,7 +320,8 @@ def test_collector():
 def test_engine(test_collector):
     """Test engine with Profilis instrumentation"""
     engine = create_engine("sqlite:///:memory:")
-    instrument_sqlalchemy(engine, test_collector)
+    emitter = Emitter(test_collector)
+    instrument_engine(engine, emitter)
     return engine
 
 def test_query_profiling(test_engine, test_collector):
@@ -351,7 +367,8 @@ import os
 os.environ['PROFILIS_DEBUG'] = '1'
 
 # This will enable debug logging for SQLAlchemy instrumentation
-instrument_sqlalchemy(engine, collector)
+emitter = Emitter(collector)
+instrument_engine(engine, emitter)
 ```
 
 ### Health Checks
@@ -374,9 +391,10 @@ def check_sqlalchemy_instrumentation(engine, collector):
 
 ## Best Practices
 
-1. **Enable Redaction**: Always enable query redaction in production
-2. **Use Sampling**: Implement sampling for high-volume applications
+1. **Enable Redaction**: Always enable query redaction in production (default behavior)
+2. **Limit Query Length**: Use `max_len` to prevent very long queries from consuming memory
 3. **Monitor Performance**: Track query performance metrics over time
-4. **Set Thresholds**: Configure appropriate slow query thresholds
+4. **Use Async Engines**: For async applications, use `instrument_async_engine()` with async SQLAlchemy engines
 5. **Test Thoroughly**: Test instrumentation in your specific environment
 6. **Review Queries**: Regularly review profiled queries for optimization opportunities
+7. **Correlate with Requests**: Use the same collector for both Flask and SQLAlchemy to correlate requests with queries
