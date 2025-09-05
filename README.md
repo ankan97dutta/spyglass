@@ -6,6 +6,7 @@
 
 [![Docs](https://github.com/ankan97dutta/profilis/actions/workflows/docs.yml/badge.svg)](https://ankan97dutta.github.io/profilis/)
 [![CI](https://github.com/ankan97dutta/profilis/actions/workflows/ci.yml/badge.svg)](https://github.com/ankan97dutta/profilis/actions/workflows/ci.yml)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/profilis?period=total&units=INTERNATIONAL_SYSTEM&left_color=black&right_color=BRIGHTGREEN&left_text=downloads)](https://pepy.tech/projects/profilis)
 ---
 
 ## Overview
